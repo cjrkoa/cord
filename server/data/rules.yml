@@ -1,0 +1,12 @@
+version: "3.1"
+
+rules:
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Respond with sample situations where Cord could help
+    steps:
+      - intent: ask_bot_capability
+      - action: utter_how_bot_can_help
