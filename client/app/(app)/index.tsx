@@ -28,18 +28,15 @@ export default function Index() {
         { id: chats.length, type: "input", text: input },
       ]);
       await new Promise((resolve) => setTimeout(resolve, 300));
-      const response = await fetch(
-        "http://0.0.0.0:5005/webhooks/rest/webhook",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: input,
-          }),
-        }
-      );
+      const response = await fetch("http://127.0.0.1:5000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: input,
+        }),
+      });
       const json = await response.json();
       console.log(json);
       setChats((chats) => [
