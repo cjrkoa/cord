@@ -1,0 +1,22 @@
+version: "3.1"
+
+rules:
+  - rule: Say goodbye anytime the user says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Respond with sample situations where Cord could help
+    steps:
+      - intent: ask_bot_capability
+      - action: utter_how_bot_can_help
+
+  - rule: Ask for clarification if user is vague
+    steps:
+      - intent: vague_problem
+      - action: utter_anxiety_info_request
+
+  - rule: out of scope responses
+    steps:
+      - intent: out_of_scope
+      - action: utter_out_of_scope

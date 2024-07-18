@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Text, View, Button, TextInput, ScrollView } from "react-native";
-import MessageContainer from "@/components/containers/MessageContainer";
+import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "@/types";
 

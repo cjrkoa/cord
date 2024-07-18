@@ -1,6 +1,6 @@
 import { Text, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import GoalContainer from "@/components/containers/GoalContainer";
+import { GoalContainer } from "@/components/Containers";
 
 export default function Goals() {
   return (
@@ -10,11 +10,14 @@ export default function Goals() {
       }}
     >
       <ScrollView>
-        <GoalContainer text={"Hello World"} />
-        <GoalContainer text={"Hello World"} />
-        <GoalContainer text={"Hello World"} />
-        <GoalContainer text={"Hello World"} />
-        <GoalContainer text={"Hello World"} />
+        <GoalContainer text={"Hello World"} backgroundColor={"#a97afa"} />
+        <GoalContainer
+          text={"Hello Worldjkasdkfhahjksdfjhkashdkjfakdkfjhlasklfkhj"}
+          backgroundColor={"#a97afa"}
+        />
+        <GoalContainer text={"Hello World"} backgroundColor={"#a97afa"} />
+        <GoalContainer text={"Hello World"} backgroundColor={"#a97afa"} />
+        <GoalContainer text={"Hello World"} backgroundColor={"#a97afa"} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,0 +1,19 @@
+{
+  "lookup": {
+    "eJyLrq6NBQAEOAGx": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohNz8/JT69KDWxpLY2FgB5Cx2P": "utter_happy",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohNz8/JT69KDWxpJaAQaUlJalF8RmJBQWV+I2JBQBwxzi2": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taS2NhYA6dwbhQ==": "utter_greet",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpbhMiAUAQvc0lw==": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohvSg1taSWgBmlJSWpRfEQpeSZQMAVicXZ8Un5QFNiAUweTzc=": "utter_ask_bot_response",
+    "eJydjkEKgDAMBL/SB/iCfkUkVFmkqKkk0Uvp3y3Us4q3HRiG7XPpXN4FJ4XJYmLvchvEYYN3N6xRDVzdQyHViVzRvJsFsPLSOMwg1NR/hZcXQRca08cft0wC3RMrHnLDBXeWba8=": "utter_redirect",
+    "eJylj0EKhDAQBL+SB/iCfEVkiLFZwupEZkYvwb9vQPEkuOitG4qiuy1b48osWClES5m9K3sgDhO8O8qY1MCVXRRSmcS1mncfAWy7cSxmENrRZ4abFUG/1Oc/dxwwCXTOrHipEwxJEC+enZruB6sSiMg=": "action_listen",
+    "eJylj1EKwyAQRK/iAXoCr1LCsjFDWZqqrJtCEe9eIfkMRNq/GXg8Zu613VzNijdxMEnRu7oHivyCd0dZpRhiZ7cC7YzEXs27hwLWLhybGZR29DfDxQouT5rT4I4DJkXJKRb8qVMsoggnzwY1Y98ocOZZVrFPa9MX2cen6Q==": "utter_how_bot_can_help",
+    "eJylj1EKAjEMRK/SA3iCvYpI6NbBDda0pFlFyt7dwvZT2KJ/GXh5zJzrdnI1K57kg3GSydX9IPEPTK6HyMUgjV0LtDEsLdrkbgrYduBYzaC0o78ZDlr4cqc5DfboMClKTlLwp05xZUX4smxQM7aNgs9+5sj2Huu1pFf/E1oQ85j58gH/M8q8": "action_listen",
+    "eJyLrq7VUaguKEoti09MLsnMz7NSqIYw4vMSc1OtFKCcnMziktQ8oNrS4tQioJrMPCC3xEohNz8/JT4xryIzv7S4tjYWALXiHoM=": "utter_compassion",
+    "eJyFjEEKwCAMBL+SB/QFfqUUCTaHQE3ExFIQ/16hvXvbWYbZ+9igl0p3xOSsEqB/IwpmCvDDxeYk021GdTosEz1AVj0jysPabCxSzZ1qTJoLms17VTtel5I8uA==": "utter_anxiety_info_request",
+    "eJytjEEKgDAMBL/SB/iCfkUklBohYBNtUlGKf7eidy/edpZh+np2ri4ZNwjRSNi7+gzgkNC7F2ZSQ25uUczNIW5o3iWREQLvJEXPj1QxwwxR0hJU2/1H7ZbRDiCeBDKuBdW+usMFXopfJg==": "action_listen",
+    "eJytj0sKwzAMRK/iA+QEvkoJwqQqCGop0aekmNw9Ds2+lHQ3MzwezK1tQ2qz4gvK5CScU/sE4FIxp7M8yRy5s2GonSHu1XOqIncovJKEbV9U4Y4Kk9S5mPX5H7YDRn8D8UNAcQk0v+b96fC4A3Mfe/g=": "utter_anxiety_understanding",
+    "eJytj0EKAjEMRa/SA3iCXmWQEKZRAjYZk1SUMne3MrqehbPL/zweP1NfT6kvRg/AOVglp74dIFgpp2+4sQfJYJuTDYZlxMipqhZAebI2X3dULYIMZq0Luo/6CNsHpngBy0XB6N7I4z/v4Q//JjYpZB4oheW6Jz6/AZionsg=": "action_listen"
+  }
+}

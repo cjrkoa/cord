@@ -1,0 +1,17 @@
+{
+  "utter_chitchat/reverse_role_response": [
+    {
+      "text": "I'm good! Thank you for asking."
+    }
+  ],
+  "utter_chitchat/redirect": [
+    {
+      "text": "How can I help you today?"
+    }
+  ],
+  "utter_chitchat/good_weather": [
+    {
+      "text": "I'm glad the weather's good by you! \n\nUnfortunately, I am incapable of experiencing weather since I'm a chatbot contained within your device."
+    }
+  ]
+}
