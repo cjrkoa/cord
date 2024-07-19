@@ -1,22 +1,18 @@
 import { router } from "expo-router";
-import { useState } from "react";
 import { Text, View, TextInput } from "react-native";
-
-import { useSession } from "../ctx";
+import { useState } from "react";
 
 export default function SignIn() {
-  const { signIn } = useSession();
-
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = async (
+  const handleRegister = async (
     username: string,
     email: string,
     password: string
   ) => {
-    const response = await fetch("http://127.0.0.1:5000/login", {
+    const response = await fetch("http://127.0.0.1:5000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,28 +26,22 @@ export default function SignIn() {
     return response.status;
   };
 
-  const handleSignInPress = async () => {
-    if (signIn(await handleSignIn(username, email, password))) {
-      console.log("success!");
-      router.replace("/");
-    } else console.log("Error: Couldn't Sign In");
-  };
-
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text
+        onPress={() => {
+          router.replace("/sign-in");
+        }}
+      >
+        Back to Sign In
+      </Text>
       <TextInput placeholder="username" onChangeText={setUsername} />
       <TextInput placeholder="email" onChangeText={setEmail} />
       <TextInput placeholder="password" onChangeText={setPassword} />
       <Text
         onPress={() => {
-          handleSignInPress();
-        }}
-      >
-        Sign In
-      </Text>
-      <Text
-        onPress={() => {
-          router.replace("/register");
+          console.log(handleRegister(username, email, password));
+          router.replace("/sign-in");
         }}
       >
         Register
