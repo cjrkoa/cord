@@ -4,7 +4,11 @@ import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "@/types";
 
+import { useSession } from "../../ctx";
+
 export default function Index() {
+  const { session } = useSession();
+
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Message[]>([
@@ -20,6 +24,26 @@ export default function Index() {
       text: "Type out a message and let's get chatting! :)",
     },
   ]);
+
+  const uploadConversation = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/upload_conversation",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chats,
+          }),
+        }
+      );
+      if (response.ok) console.log("success!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const messageChatbot = async (input: string) => {
     try {
@@ -96,7 +120,8 @@ export default function Index() {
         <Button
           title="◯"
           onPress={() => {
-            if (input.length > 0)
+            if (input === "UPLOAD") uploadConversation();
+            else if (input.length > 0)
               messageChatbot(input).then(() => setInput(""));
           }}
         />

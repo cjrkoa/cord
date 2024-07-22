@@ -1,5 +1,8 @@
 version: "3.1"
 
+policies:
+  - name: RulePolicy
+
 intents:
   - greet
   - goodbye
@@ -49,6 +52,24 @@ responses:
 
   utter_out_of_scope:
     - text: "Sorry, I don't understand what you're trying to say :("
+
+entities:
+  - name
+  - reason_for_using_cord
+slots:
+  is_new_user:
+    type: boolean
+    initial_value: True
+  name:
+    type: text
+  reason_for_using_cord:
+    type: text
+
+forms:
+  new_user:
+    required_slots:
+      - name
+      - reason_for_using_cord
 
 session_config:
   session_expiration_time: 60

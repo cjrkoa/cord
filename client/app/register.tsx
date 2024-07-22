@@ -21,6 +21,7 @@ export default function SignIn() {
         username,
         email,
         password,
+        lastInteraction: null,
       }),
     });
     return response.status;
@@ -28,13 +29,6 @@ export default function SignIn() {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text
-        onPress={() => {
-          router.replace("/sign-in");
-        }}
-      >
-        Back to Sign In
-      </Text>
       <TextInput placeholder="username" onChangeText={setUsername} />
       <TextInput placeholder="email" onChangeText={setEmail} />
       <TextInput placeholder="password" onChangeText={setPassword} />
@@ -45,6 +39,13 @@ export default function SignIn() {
         }}
       >
         Register
+      </Text>
+      <Text
+        onPress={() => {
+          router.replace("/sign-in");
+        }}
+      >
+        Back to Sign In
       </Text>
     </View>
   );

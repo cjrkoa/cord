@@ -2,7 +2,7 @@ import { useContext, createContext, type PropsWithChildren } from "react";
 import { useStorageState } from "./hooks/useStorageState";
 
 const AuthContext = createContext<{
-  signIn: (status: number) => boolean;
+  signIn: (access_token: string) => boolean;
   signOut: () => void;
   session?: string | null;
   isLoading: boolean;
@@ -31,10 +31,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: (status: number) => {
-          //TODO: Probably figure out a better way of doing this
-          if (status === 200) {
-            setSession("xxx");
+        signIn: (access_token: string) => {
+          if (access_token != null) {
+            setSession(access_token);
             return true;
           }
           return false;

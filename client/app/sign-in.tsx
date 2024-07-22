@@ -16,22 +16,35 @@ export default function SignIn() {
     email: string,
     password: string
   ) => {
-    const response = await fetch("http://127.0.0.1:5000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
-    });
-    return response.status;
+    try {
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        return json["access_token"];
+      } else {
+        return response.status;
+      }
+    } catch (error) {
+      return error;
+    }
   };
 
   const handleSignInPress = async () => {
-    if (signIn(await handleSignIn(username, email, password))) {
+    const res: string | number = await handleSignIn(username, email, password);
+
+    if (typeof res === "string") {
+      signIn(res);
       console.log("success!");
       router.replace("/");
     } else console.log("Error: Couldn't Sign In");
