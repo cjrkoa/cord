@@ -4,23 +4,19 @@ import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "@/types";
 
-import { useSession } from "../../ctx";
-
 export default function Index() {
-  const { session } = useSession();
-
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Message[]>([
-    { id: 0, type: "response", text: "Hello!" },
+    { id: 0, type: "bot", text: "Hello!" },
     {
       id: 1,
-      type: "response",
+      type: "bot",
       text: "I'm Cord, your emotional support chatbot.",
     },
     {
       id: 2,
-      type: "response",
+      type: "bot",
       text: "Type out a message and let's get chatting! :)",
     },
   ]);
@@ -49,9 +45,9 @@ export default function Index() {
     try {
       setChats((chats) => [
         ...chats,
-        { id: chats.length, type: "input", text: input },
+        { id: chats.length, type: "user", text: input },
       ]);
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 1250));
       const response = await fetch("http://127.0.0.1:5000/chat", {
         method: "POST",
         headers: {
@@ -67,7 +63,7 @@ export default function Index() {
         ...chats,
         ...json.map((item: any, i: number) => ({
           id: chats.length + i,
-          type: "response",
+          type: "bot",
           text: item.text,
         })),
       ]);
@@ -101,8 +97,8 @@ export default function Index() {
           <MessageContainer
             key={i}
             text={data.text}
-            backgroundColor={data.type === "response" ? "#a97afa" : "white"}
-            alignItems={data.type === "response" ? "flex-start" : "flex-end"}
+            backgroundColor={data.type === "bot" ? "#a97afa" : "white"}
+            alignItems={data.type === "bot" ? "flex-start" : "flex-end"}
           />
         ))}
       </ScrollView>

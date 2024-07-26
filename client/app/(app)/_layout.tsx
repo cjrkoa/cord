@@ -60,7 +60,7 @@ export default function AppLayout() {
         }}
       />
       <Tabs.Screen
-        name="sign-out"
+        name="settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ color, focused }) => (

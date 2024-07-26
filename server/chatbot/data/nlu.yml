@@ -1166,3 +1166,74 @@ nlu:
       - My reason for using Cord is [Reason](reason_for_using_cord)
       - I'm using this app because [Reason](reason_for_using_cord)
       - It's because [Reason](reason_for_using_cord)
+
+  - intent: work_stress
+    examples: |
+      - I have a number of projects that I'm feeling stressed about at work
+      - My projects are overlapping and due at about the same time. I’m having trouble managing them all.
+
+  - intent: seek_relaxation_tips
+    examples: |
+      - Can you recommend anything I can do to de-stress?
+      - What can I do to manage my stress levels
+      - How can I relax?
+
+  - intent: seek_solution
+    examples: |
+      - Can you recommend anything?
+      - What should I do?
+      - How can I fix that?
+
+  - intent: frustrated_with_bot
+    examples: |
+      - What good are you then?
+      - ANYTHING
+      - TEST
+      - ARE YOU THERE?
+      - I hate you
+
+  - intent: enter_scenario
+    examples: |
+      - I'm going through a rough time at
+      - I'm experiencing hardship
+      - I went through
+      - I am going through a rough period
+      - I am going through
+      - I'm having a hard time because
+
+  - intent: enter_support_sought
+    examples: |
+      - I want support with
+      - I'd like help with
+      - I need help with
+      - I want tips to
+
+  - intent: social_anxiety
+    examples: |
+      - social anxiety
+      - I'm feeling social anxiety
+
+  - intent: social_anxiety_symptoms
+    examples: |
+      = blushing
+      - sweating
+      - mind went blank
+      - my mind froze
+      - I couldn't talk to anyone
+      - my heart was racing
+      - I felt nauseous
+      - I was dizzy
+
+  - intent: social_anxiety_situation
+    examples: |
+      - I was at this networking event
+      - My Dad invited me to a family reunion
+      = I was at a bar
+
+  - intent: social_anxiety_underlying_thoughts
+    examples: |
+      - I'm afraid people with judge me
+      - I was bullied as a kid
+      - I don't want to be criticised
+      - I'm embaressed
+      - I fear social rejection

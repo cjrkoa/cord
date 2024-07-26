@@ -14,7 +14,7 @@ rules:
   - rule: Ask for clarification if user is vague
     steps:
       - intent: vague_problem
-      - action: utter_anxiety_info_request
+      - action: utter_generic_info_request
 
   - rule: out of scope responses
     steps:

@@ -17,6 +17,16 @@ intents:
   - vague_problem
   - provide_name
   - provide_reason_for_using_cord
+  - work_stress
+  - seek_relaxation_tips
+  - seek_solution
+  - frustrated_with_bot
+  - enter_scenario
+  - enter_support_sought
+  - social_anxiety
+  - social_anxiety_scenario
+  - social_anxiety_symptoms
+  - social_anxiety_underlying_thoughts
 
 responses:
   utter_greet:
@@ -29,14 +39,22 @@ responses:
     - text: "Bye"
   utter_compassion:
     - text: "I'm sorry to hear that. I'm here to listen and I want to support you."
+  utter_generic_info_request:
+    - text: "Can you tell me a bit more?"
   utter_anxiety_info_request:
     - text: "Can you tell me more about why you're feeling this way?"
+  utter_social_anxiety_scenario_info_request:
+    - text: "Could you describe a recent scenario where you felt social anxiety?"
+  utter_social_anxiety_behaivor_info_request:
+    - text: "When you're in a situation like that, can you describe how you physically feel in your body?"
   utter_anxiety_understanding:
     - text: "That sounds difficult. I can understand why you're feeling anxious."
   utter_chitchat_reverse_role_response:
     - text: "I'm good! Thank you for asking."
   utter_chitchat_redirect:
     - text: "How can I help you today?"
+  utter_support_redirect:
+    - text: "How can I support you?"
   utter_chitchat_good_weather:
     - text: "I'm glad the weather's good by you! \n\nUnfortunately, I am incapable of experiencing weather since I'm a chatbot contained within your device."
   utter_how_bot_can_help:
@@ -47,6 +65,14 @@ responses:
     - text: "Hi, {name}!"
   utter_reason_for_using_cord:
     - text: "Reason for using cord: {reason_for_using_cord}"
+  utter_bot_frustration_response:
+    - text: "I can see your frustration toward me; Seeking support from someone only to recieve a vague, cryptic, or irrelevant response can be highly frustrating and I completely understand why you're feeling this way.\n\nI see this as a great learning opportunity for myself to keep improving. Can you describe the scenario you're experiencing for, and what kind of support you were seeking?"
+  utter_gratitude_for_info:
+    - text: "Thank you for sharing that with me."
+  utter_generic_reassurance:
+    - text: "You're not alone in feeling this way."
+  utter_bot_frustration_redirect:
+    - text: "In the future, I hope I'm able to support you in this scenario more effectively. For now though, is there anything else you'd like to talk about?"
 
 entities:
   - name

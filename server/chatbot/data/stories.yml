@@ -29,3 +29,39 @@ stories:
       - action: utter_anxiety_info_request
       - intent: mood_anxious
       - action: utter_anxiety_understanding
+
+  - story: social anxiety
+    steps:
+      - intent: social_anxiety
+      - action: utter_compassion
+      - action: utter_social_anxiety_scenario_info_request
+      - intent: social_anxiety_scenario
+      - action: utter_generic_reassurance
+      - action: utter_social_anxiety_behaivor_info_request
+      - intent: social_anxiety_symptoms
+      - action: utter_gratitude_for_info
+      - action: utter_anxiety_info_request
+      - intent: social_anxiety_underlying_thoughts
+      - action: utter_generic_reassurance
+      - action: utter_gratitude_for_info
+      - action: utter_support_redirect
+
+  - story: bot frustration
+    steps:
+      - intent: frustrated_with_bot
+      - action: utter_bot_frustration_response
+      - intent: enter_scenario
+      - action: utter_happy
+      - intent: enter_support_sought
+      - action: utter_gratitude_for_info
+      - action: utter_bot_frustration_redirect
+
+  - story: work stress
+    steps:
+      - intent: work_stress
+      - action: utter_compassion
+      - action: utter_generic_info_request
+      - intent: mood_anxious
+      - action: utter_anxiety_understanding
+      - action: utter_support_redirect
+      - intent: enter_support_sought
