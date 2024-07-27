@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { Text, View, TextInput } from "react-native";
+import { Text, View, TextInput, Appearance } from "react-native";
 
 import { useSession } from "../ctx";
 
@@ -45,7 +45,7 @@ export default function SignIn() {
 
     if (typeof res === "string") {
       signIn(res);
-      console.log("success!");
+      Appearance.setColorScheme("dark");
       router.replace("/");
     } else console.log("Error: Couldn't Sign In");
   };

@@ -31,22 +31,18 @@ export default function AppLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "dark"].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? "dark"].tabIconSelected,
+        tabBarInactiveTintColor: Colors[colorScheme ?? "dark"].tabIconDefault,
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
+          height: "9%",
+          paddingTop: 4,
+          paddingBottom: 4,
+          borderTopWidth: 0,
+        },
         headerShown: false,
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "chatbox" : "chatbox-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />
       <Tabs.Screen
         name="goals"
         options={{
@@ -54,6 +50,18 @@ export default function AppLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "checkbox" : "checkbox-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Chat",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "chatbox" : "chatbox-outline"}
               color={color}
             />
           ),

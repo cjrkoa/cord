@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, Button, TextInput, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  TextInput,
+  ScrollView,
+  useColorScheme,
+} from "react-native";
 import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "@/types";
+import { Colors } from "@/constants/Colors";
 
 export default function Index() {
+  const colorScheme = useColorScheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Message[]>([
@@ -84,7 +93,7 @@ export default function Index() {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: "#100c17",
+        backgroundColor: Colors[colorScheme ?? "dark"].background,
       }}
     >
       <ScrollView
@@ -97,14 +106,27 @@ export default function Index() {
           <MessageContainer
             key={i}
             text={data.text}
+            textColor={Colors["light"].text}
             backgroundColor={data.type === "bot" ? "#a97afa" : "white"}
             alignItems={data.type === "bot" ? "flex-start" : "flex-end"}
           />
         ))}
       </ScrollView>
-      <View style={{ flexDirection: "row" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          borderColor: Colors[colorScheme ?? "dark"].tint,
+          borderWidth: 1,
+          borderRadius: 50,
+          padding: 5,
+        }}
+      >
         <TextInput
-          style={{ padding: 15, width: "90%", color: "white" }}
+          style={{
+            padding: 15,
+            width: "90%",
+            color: Colors[colorScheme ?? "dark"].text,
+          }}
           onChangeText={setInput}
           value={input}
           onSubmitEditing={(e) => {
@@ -113,14 +135,16 @@ export default function Index() {
           }}
           placeholder="Enter your Message Here..."
         />
-        <Button
-          title="◯"
+        <Text
+          style={{ color: "blue", fontSize: 25, paddingTop: 8 }}
           onPress={() => {
             if (input === "UPLOAD") uploadConversation();
             else if (input.length > 0)
               messageChatbot(input).then(() => setInput(""));
           }}
-        />
+        >
+          ◯
+        </Text>
       </View>
     </SafeAreaView>
   );

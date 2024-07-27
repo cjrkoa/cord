@@ -10,6 +10,7 @@ import Animated, {
 
 type ContainerProps = {
   text: string;
+  textColor?: string | undefined;
   backgroundColor?: ColorValue | undefined;
   alignItems?: FlexAlignType | undefined;
   justifyContent?:
@@ -56,7 +57,7 @@ export const MessageContainer = (props: ContainerProps) => {
           alignItems: props.alignItems,
         }}
       >
-        <Text>{props.text}</Text>
+        <Text style={{ color: props.textColor }}>{props.text}</Text>
       </View>
     </Animated.View>
   );
@@ -79,7 +80,7 @@ export const GoalContainer = (props: ContainerProps) => {
         alignItems: props.alignItems,
       }}
     >
-      <Text>{props.text}</Text>
+      <Text style={{ color: props.textColor }}>{props.text}</Text>
     </View>
   );
 };
