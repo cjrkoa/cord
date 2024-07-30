@@ -1,7 +1,8 @@
-import { Text, ScrollView, useColorScheme } from "react-native";
+import { Text, ScrollView, useColorScheme, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GoalContainer } from "@/components/Containers";
 import { Colors } from "@/constants/Colors";
+import CordLogo from "@/components/CordLogo";
 
 import { useSession } from "../../ctx";
 
@@ -31,6 +32,15 @@ export default function Goals() {
         backgroundColor: Colors[colorScheme ?? "dark"].background,
       }}
     >
+      <View
+        style={{
+          backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
+          height: "10%",
+          alignItems: "center",
+        }}
+      >
+        <CordLogo paddingBottom={0} size={50} weight={400} />
+      </View>
       <ScrollView>
         <GoalContainer
           text={"Hello World"}

@@ -15,6 +15,7 @@ export const Colors = {
     tabBarBackground: '#302a5c',
     tabIconDefault: '#ECEDEE',
     tabIconSelected: tintColorDark,
+    textInput: '#e3e3d1'
   },
   dark: {
     text: '#ECEDEE',
@@ -24,5 +25,6 @@ export const Colors = {
     tabBarBackground:'#302a5c',
     tabIconDefault: '#ECEDEE',
     tabIconSelected: tintColorDark,
+    textInput: '#191324'
   },
 };

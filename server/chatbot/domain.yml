@@ -44,9 +44,9 @@ responses:
   utter_anxiety_info_request:
     - text: "Can you tell me more about why you're feeling this way?"
   utter_social_anxiety_scenario_info_request:
-    - text: "Could you describe a recent scenario where you felt social anxiety?"
+    - text: "Can you talk to me about a recent time where you felt socially anxious?"
   utter_social_anxiety_behaivor_info_request:
-    - text: "When you're in a situation like that, can you describe how you physically feel in your body?"
+    - text: "When you're in a situation like that, can you describe what you feel?"
   utter_anxiety_understanding:
     - text: "That sounds difficult. I can understand why you're feeling anxious."
   utter_chitchat_reverse_role_response:

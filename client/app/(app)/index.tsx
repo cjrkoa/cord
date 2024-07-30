@@ -11,6 +11,7 @@ import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Message } from "@/types";
 import { Colors } from "@/constants/Colors";
+import CordLogo from "@/components/CordLogo";
 
 export default function Index() {
   const colorScheme = useColorScheme();
@@ -96,6 +97,15 @@ export default function Index() {
         backgroundColor: Colors[colorScheme ?? "dark"].background,
       }}
     >
+      <View
+        style={{
+          backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
+          height: "10%",
+          alignItems: "center",
+        }}
+      >
+        <CordLogo paddingBottom={0} size={50} weight={400} />
+      </View>
       <ScrollView
         ref={scrollViewRef}
         onContentSizeChange={() =>
@@ -106,7 +116,9 @@ export default function Index() {
           <MessageContainer
             key={i}
             text={data.text}
-            textColor={Colors["light"].text}
+            textColor={
+              data.type === "bot" ? Colors["dark"].text : Colors["light"].text
+            }
             backgroundColor={data.type === "bot" ? "#a97afa" : "white"}
             alignItems={data.type === "bot" ? "flex-start" : "flex-end"}
           />
@@ -115,10 +127,12 @@ export default function Index() {
       <View
         style={{
           flexDirection: "row",
+          backgroundColor: Colors[colorScheme ?? "dark"].textInput,
           borderColor: Colors[colorScheme ?? "dark"].tint,
           borderWidth: 1,
           borderRadius: 50,
           padding: 5,
+          margin: 10,
         }}
       >
         <TextInput

@@ -1212,6 +1212,7 @@ nlu:
     examples: |
       - social anxiety
       - I'm feeling social anxiety
+      - I need help dealing with social anxiety
 
   - intent: social_anxiety_symptoms
     examples: |
@@ -1229,6 +1230,10 @@ nlu:
       - I was at this networking event
       - My Dad invited me to a family reunion
       = I was at a bar
+      - When I go to meet new people
+      - People
+      - Friends
+      - Family
 
   - intent: social_anxiety_underlying_thoughts
     examples: |
