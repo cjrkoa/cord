@@ -43,7 +43,7 @@ export default function AppLayout() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen
+      {/*<Tabs.Screen
         name="goals"
         options={{
           title: "Goals",
@@ -54,7 +54,7 @@ export default function AppLayout() {
             />
           ),
         }}
-      />
+      />*/}
       <Tabs.Screen
         name="index"
         options={{

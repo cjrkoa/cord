@@ -57,7 +57,9 @@ export const MessageContainer = (props: ContainerProps) => {
           alignItems: props.alignItems,
         }}
       >
-        <Text style={{ color: props.textColor }}>{props.text}</Text>
+        <Text style={{ color: props.textColor, fontWeight: 600 }}>
+          {props.text}
+        </Text>
       </View>
     </Animated.View>
   );

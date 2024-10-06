@@ -30,15 +30,29 @@ export default function Settings() {
           value={isEnabled}
         />
       </View>
-      <Text
-        style={{ color: Colors[colorScheme ?? "dark"].text }}
-        onPress={() => {
-          // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
-          signOut();
+      <View
+        style={{
+          backgroundColor: "red",
+          padding: 10,
+          margin: 20,
+          borderWidth: 10,
+          borderRadius: 20,
+          borderColor: "red",
         }}
       >
-        Sign Out
-      </Text>
+        <Text
+          style={{
+            color: Colors[colorScheme ?? "dark"].text,
+            fontWeight: "bold",
+          }}
+          onPress={() => {
+            // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
+            signOut();
+          }}
+        >
+          Sign Out
+        </Text>
+      </View>
     </View>
   );
 }

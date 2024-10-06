@@ -18,7 +18,7 @@ export default function Index() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Message[]>([
-    { id: 0, type: "bot", text: "Hello!" },
+    { id: 0, type: "bot", text: "Hello! :)" },
     {
       id: 1,
       type: "bot",
@@ -27,7 +27,7 @@ export default function Index() {
     {
       id: 2,
       type: "bot",
-      text: "Type out a message and let's get chatting! :)",
+      text: "How are you feeling today?",
     },
   ]);
 
@@ -65,19 +65,26 @@ export default function Index() {
         },
         body: JSON.stringify({
           message: input,
+          memory: chats,
         }),
       });
       const json = await response.json();
       console.log(json);
       setChats((chats) => [
         ...chats,
-        ...json.map((item: any, i: number) => ({
+        {
+          id: chats.length,
+          type: "bot",
+          text: json["message"],
+        },
+        /*...json.map((item: any, i: number) => ({
           id: chats.length + i,
           type: "bot",
           text: item.text,
-        })),
+        })),*/
       ]);
-      return json.map((item: any) => item.text);
+      return json["message"];
+      //return json.map((item: any) => item.text);
     } catch (error) {
       console.error(error);
     }
