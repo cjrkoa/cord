@@ -4,11 +4,11 @@ from database import get_database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 import requests
+from gpt_wrapper import answer_prompt
 
 app = Flask(__name__)
 CORS(app)
 
-rasa_address = "http://0.0.0.0:5005/webhooks/rest/webhook"
 db = get_database()
 
 # Setup the Flask-JWT-Extended extension
@@ -17,8 +17,16 @@ jwt = JWTManager(app)
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    res = requests.post(rasa_address, json=request.get_json())
-    return res.json()
+    memory = []
+    for item in request.get_json()["memory"]:
+        sys_prompt = {
+            "role": "system",
+            "content": item["type"] + ": " + item["text"]
+        }
+        memory.append(sys_prompt)
+
+
+    return answer_prompt(memory, request.get_json()["message"])
 
 @app.route("/register", methods=["POST"])
 def register():
