@@ -12,5 +12,8 @@ def get_database():
         client.admin.command('ping')
         return client["cord"]
     except Exception as e:
-        print(e)
+        print(f"Error Connecting to MongoDB: {e}")
         return None
+
+if __name__ == "__main__":
+    print(get_database())

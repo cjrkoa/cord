@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Message } from "@/types";
+import { Message, MessageSchema } from "@/types";
 import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
 

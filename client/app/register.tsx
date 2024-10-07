@@ -43,16 +43,19 @@ export default function SignIn() {
         style={{ color: Colors["dark"].text }}
         placeholder="username"
         onChangeText={setUsername}
+        autoCapitalize="none"
       />
       <TextInput
         style={{ color: Colors["dark"].text }}
         placeholder="email"
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
       <TextInput
         style={{ color: Colors["dark"].text }}
         placeholder="password"
         onChangeText={setPassword}
+        autoCapitalize="none"
       />
       <Text
         style={{ color: Colors["dark"].text }}
