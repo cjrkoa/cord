@@ -1,6 +1,12 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { Text, View, TextInput, Appearance } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  Appearance,
+  useColorScheme,
+} from "react-native";
 import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
 
@@ -62,24 +68,69 @@ export default function SignIn() {
       }}
     >
       <CordLogo paddingBottom={250} size={130} weight={400} />
-      <TextInput
-        style={{ color: Colors["dark"].text }}
-        placeholder="username"
-        onChangeText={setUsername}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={{ color: Colors["dark"].text }}
-        placeholder="email"
-        onChangeText={setEmail}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={{ color: Colors["dark"].text }}
-        placeholder="password"
-        onChangeText={setPassword}
-        autoCapitalize="none"
-      />
+      <View
+        style={{
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: Colors["dark"].background,
+          borderColor: Colors["dark"].tint,
+          borderWidth: 1,
+          borderRadius: 0,
+          padding: 5,
+          margin: 2.5,
+          width: "75%",
+          height: "7.5%",
+        }}
+      >
+        <TextInput
+          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          placeholder="username"
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: Colors["dark"].textInput,
+          borderColor: Colors["dark"].tint,
+          borderWidth: 1,
+          borderRadius: 0,
+          padding: 5,
+          margin: 2.5,
+          width: "75%",
+          height: "7.5%",
+        }}
+      >
+        <TextInput
+          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          placeholder="email"
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "column",
+          alignItems: "center",
+          backgroundColor: Colors["dark"].textInput,
+          borderColor: Colors["dark"].tint,
+          borderWidth: 1,
+          borderRadius: 0,
+          padding: 5,
+          margin: 2.5,
+          width: "75%",
+          height: "7.5%",
+        }}
+      >
+        <TextInput
+          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          placeholder="password"
+          onChangeText={setPassword}
+          autoCapitalize="none"
+        />
+      </View>
       <Text
         style={{ color: Colors["dark"].text }}
         onPress={() => {

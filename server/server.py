@@ -64,8 +64,8 @@ def register():
     verification_link = f'http://localhost:5000/verify/{token}'
 
     # Send verification email
-    msg = Message("Verify Your Email", recipients=[email])
-    msg.body = f'Click the link to verify your email: {verification_link}'
+    msg = Message("Verify your email address", recipients=[email])
+    msg.body = f'Thank you for signing up to use Cord! :)\nVerify your account by clicking the link below:\n{verification_link}'
     mail.send(msg)
 
     return jsonify({"msg": "User registered successfully, check your email to verify"}), 201

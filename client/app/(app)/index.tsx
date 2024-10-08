@@ -9,27 +9,16 @@ import {
 } from "react-native";
 import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Message, MessageSchema } from "@/types";
+import { Message, MessageSchema } from "@/utils/types";
 import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
+import { mergeItem, getItem, getChatlog, clear } from "@/utils/AsyncStorage";
 
 export default function Index() {
   const colorScheme = useColorScheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
-  const [chats, setChats] = useState<Message[]>([
-    { id: 0, type: "bot", text: "Hello! :)" },
-    {
-      id: 1,
-      type: "bot",
-      text: "I'm Cord, your emotional support chatbot.",
-    },
-    {
-      id: 2,
-      type: "bot",
-      text: "How are you feeling today?",
-    },
-  ]);
+  const [chats, setChats] = useState<Message[]>([]);
 
   const uploadConversation = async () => {
     try {
@@ -48,6 +37,40 @@ export default function Index() {
       if (response.ok) console.log("success!");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const dummyChatbot = async (input: string) => {
+    try {
+      setChats((chats: Message[]) => {
+        const updatedChats = [
+          ...chats,
+          { id: chats.length, type: "user", text: input },
+        ];
+        mergeItem("chatlog", updatedChats);
+        return updatedChats;
+      });
+      await new Promise((resolve) => setTimeout(resolve, 1250));
+      setChats((chats: Message[]) => {
+        const updatedChats = [
+          ...chats,
+          {
+            id: chats.length,
+            type: "bot",
+            text: "This is a test response so I don't have to call OpenAI's API",
+          },
+        ];
+        mergeItem("chatlog", updatedChats);
+        return updatedChats;
+      });
+      console.log(await getChatlog());
+      return {
+        id: chats.length,
+        type: "bot",
+        text: "This is a test response so I don't have to call OpenAI's API",
+      };
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -83,6 +106,8 @@ export default function Index() {
           text: item.text,
         })),*/
       ]);
+      mergeItem("chatlog", { 0: chats });
+      console.log(getChatlog());
       return json["message"];
       //return json.map((item: any) => item.text);
     } catch (error) {
@@ -90,7 +115,12 @@ export default function Index() {
     }
   };
 
+  const fetchChatlog = async () => {
+    setChats(await getChatlog());
+  };
+
   useEffect(() => {
+    fetchChatlog();
     // Scroll to bottom whenever chats update
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
@@ -160,6 +190,7 @@ export default function Index() {
           style={{ color: "blue", fontSize: 25, paddingTop: 8 }}
           onPress={() => {
             if (input === "UPLOAD") uploadConversation();
+            else if (input == "CLEAR") clear();
             else if (input.length > 0)
               messageChatbot(input).then(() => setInput(""));
           }}
