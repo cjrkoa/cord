@@ -17,6 +17,10 @@ db = get_database()
 app.config["JWT_SECRET_KEY"] = "super-secret" # TODO: Change this (it's fine for now)
 jwt = JWTManager(app)
 
+# JWT Configuration
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 900 # 15 minute expiration
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 86400 # 1 day expiration
+
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io'  # e.g., 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587  # Use 465 for SSL
@@ -104,17 +108,39 @@ def login():
 
     if user and check_password_hash(user["password"], password) and user["is_verified"] == True:
         access_token = create_access_token(identity=str(user["_id"]))
-        return jsonify(access_token=access_token), 200
+        refresh_token = create_refresh_token(identity=str(user["_id"]))
+        return jsonify({
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }), 200
     
     return jsonify({"msg": "Invalid credentials"}), 401
 
+@app.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)  # Only allow refresh tokens
+def refresh():
+    current_user = get_jwt_identity()
+    new_access_token = create_access_token(identity=current_user)
+    return jsonify({"access_token": new_access_token}), 200
+
 @app.route("/upload_conversation", methods=["POST"])
+@jwt_required()
 def upload_conversation():
     try:
         db["conversations"].insert_one(request.get_json())
         return jsonify({"msg": "Conversation uploaded successfully"}), 201
     except:
         return jsonify({"msg": "Error uploading conversation"}), 400
+
+@app.route("/upload_feedback", methods=["POST"])
+@jwt_required()
+def upload_feedback():
+    print(request.get_json())
+    try:
+        db["feedback"].insert_one(request.get_json())
+        return jsonify({"msg": "Feedback uploaded successfully"}), 201
+    except:
+        return jsonify({"msg": "Error uploading feedback"}), 400
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.

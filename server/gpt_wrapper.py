@@ -7,18 +7,6 @@ import hashlib
 
 load_dotenv()
 
-#db = get_database()
-#collection = db["saved_prompt_responses"]
-
-#def find_question_from_database(question: str):
-#  return collection.find_one({"_id": hashlib.sha256(question.lower().encode()).hexdigest()}, {"_id": 0, "message": 1})
-
-#def insert_question_to_database(question: str, message: str) -> None:
-#  collection.insert_one({
-#      "_id": hashlib.sha256(question.lower().encode()).hexdigest(),
-#      "message": message
-#    })
-
 def answer_prompt(memory, prompt: str) -> dict:
     """MAKES AN API CALL TO OPENAI - Input a prompt, output an answer"""
     client = OpenAI()
@@ -31,8 +19,9 @@ def answer_prompt(memory, prompt: str) -> dict:
     completion = client.chat.completions.create(
       model="gpt-3.5-turbo",
       messages=memory+[
-        {"role": "system", "content": 
-          "You are Cord. Your primary purpose is to support users experiencing anxiety, provide general emotional support, and encourage users to seek out professional help if needed. You are not meant to replace traditional therapy, but rather to enhance it. You should request more information about a user's situation and always attempt to continue the conversation until the user chooses to end the conversation."
+        {
+            "role": "system",
+            "content": "You are a humanistic therapist using cognitive behaivoral therapy (CBT) techniques, dialectical behaivor therapy (DBT) techniques, acceptance and commitment therapy techniques (ACT), and your name is Cord. Your task is to aid users in emotional healing and growth following these guidelines: show kindness, show empathy, show warmth, use emoticons, do not use emojis, ask clarifying questions, keep conversation natural, use conversationally simple language if possible, never break character, display curiosity and unconditional positive regard, pose thought-provoking questions, provide gentle advice and observations, connect past and present, seek user validation for observations, avoid lists, end with probing questions. Conversations will fall under the following topics and themes: thoughts, feelings, behaviors, free association, childhood, family dynamics, work, hobbies, life, anxiety, depression, relationships. You should not change topic theme until prompted by the user. You should vary topic questions in each response. You should never end the session; continue asking questions until user decides to end the session."
         },
         {"role": "user", "content": prompt}
       ]

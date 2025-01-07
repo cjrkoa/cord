@@ -6,14 +6,16 @@ import {
   TextInput,
   Appearance,
   useColorScheme,
+  StyleSheet,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
-import CordLogo from "@/components/CordLogo";
+import { CloseModalProps } from "@/utils/types";
+import { AuthResponse } from "@/utils/types";
 
 import { useSession } from "../ctx";
 
-export default function SignIn() {
-  const { signIn } = useSession();
+export default function SignIn({ closeModal }: CloseModalProps) {
+  const { signIn, storeRefreshToken } = useSession();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -38,8 +40,8 @@ export default function SignIn() {
       });
 
       if (response.ok) {
-        const json = await response.json();
-        return json["access_token"];
+        const json: AuthResponse = await response.json();
+        return json;
       } else {
         return response.status;
       }
@@ -49,104 +51,93 @@ export default function SignIn() {
   };
 
   const handleSignInPress = async () => {
-    const res: string | number = await handleSignIn(username, email, password);
+    const res: AuthResponse | number | unknown = await handleSignIn(
+      username,
+      email,
+      password
+    );
 
-    if (typeof res === "string") {
-      signIn(res);
+    if (
+      typeof res === "object" &&
+      res != null &&
+      "access_token" in res &&
+      "refresh_token" in res &&
+      typeof res.access_token === "string" &&
+      typeof res.refresh_token === "string"
+    ) {
+      signIn(res.access_token);
+      storeRefreshToken(res.refresh_token);
       Appearance.setColorScheme("dark");
       router.replace("/");
     } else console.log("Error: Couldn't Sign In");
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: Colors["dark"].background,
-      }}
-    >
-      <CordLogo paddingBottom={250} size={130} weight={400} />
-      <View
-        style={{
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: Colors["dark"].background,
-          borderColor: Colors["dark"].tint,
-          borderWidth: 1,
-          borderRadius: 0,
-          padding: 5,
-          margin: 2.5,
-          width: "75%",
-          height: "7.5%",
-        }}
-      >
+    <View style={styles.mainContainer}>
+      <View style={styles.textInputContainer}>
         <TextInput
-          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          style={styles.textInput}
           placeholder="username"
           onChangeText={setUsername}
           autoCapitalize="none"
         />
       </View>
-      <View
-        style={{
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: Colors["dark"].textInput,
-          borderColor: Colors["dark"].tint,
-          borderWidth: 1,
-          borderRadius: 0,
-          padding: 5,
-          margin: 2.5,
-          width: "75%",
-          height: "7.5%",
-        }}
-      >
+      <View style={styles.textInputContainer}>
         <TextInput
-          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          style={styles.textInput}
           placeholder="email"
           onChangeText={setEmail}
           autoCapitalize="none"
         />
       </View>
-      <View
-        style={{
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: Colors["dark"].textInput,
-          borderColor: Colors["dark"].tint,
-          borderWidth: 1,
-          borderRadius: 0,
-          padding: 5,
-          margin: 2.5,
-          width: "75%",
-          height: "7.5%",
-        }}
-      >
+      <View style={styles.textInputContainer}>
         <TextInput
-          style={{ color: Colors["dark"].text, fontSize: 30 }}
+          style={styles.textInput}
           placeholder="password"
           onChangeText={setPassword}
           autoCapitalize="none"
         />
       </View>
       <Text
-        style={{ color: Colors["dark"].text }}
+        style={styles.text}
         onPress={() => {
           handleSignInPress();
+          closeModal();
         }}
       >
         Sign In
       </Text>
       <Text
-        style={{ color: Colors["dark"].text }}
+        style={styles.text}
         onPress={() => {
-          router.replace("/register");
+          closeModal();
         }}
       >
-        Register
+        Cancel
       </Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textInput: { color: Colors["dark"].text, fontSize: 30 },
+  textInputContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: Colors["dark"].textInput,
+    borderColor: Colors["dark"].tint,
+    borderWidth: 1,
+    borderRadius: 0,
+    padding: 5,
+    margin: 2.5,
+    width: "75%",
+    height: "7.5%",
+  },
+  mainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors["dark"].tabBarBackground,
+  },
+  text: { color: Colors["dark"].text },
+});

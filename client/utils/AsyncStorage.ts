@@ -21,7 +21,13 @@ export const getItem = async (key: string) => {
 export const getChatlog = async () => {
     try {
         const value = await AsyncStorage.getItem("chatlog");
-        return value != null ? JSON.parse(value) : [
+        const parsedValue = value != null ? JSON.parse(value) : null;
+
+        if (Array.isArray(parsedValue)){
+            return parsedValue;
+        }
+
+        return [
             { id: 0, type: "bot", text: "Hello! :)" },
             {
               id: 1,
@@ -48,14 +54,33 @@ export const removeItem = async (key: string) => {
   }
 };
 
-// preferred to setItem
 export const mergeItem = async (key: string, value: any) => {
-  try {
-    await AsyncStorage.mergeItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.error('Error merging item:', error);
-  }
-};
+    try {
+      console.log("Attempting to store key:", key);
+      
+      // Fetch current data from AsyncStorage
+      const currentData = await AsyncStorage.getItem(key);
+      const parsedData = currentData ? JSON.parse(currentData) : null;
+  
+      // Check if the existing data is an array or an object
+      if (Array.isArray(parsedData)) {
+        // If it's an array, concatenate the new value
+        const newData = [...parsedData, ...value];
+        await AsyncStorage.setItem(key, JSON.stringify(newData));
+      } else if (parsedData !== null && typeof parsedData === "object") {
+        // If it's an object, merge the new value
+        const newData = { ...parsedData, ...value };
+        await AsyncStorage.setItem(key, JSON.stringify(newData));
+      } else {
+        // If no data exists, just store the new value
+        await AsyncStorage.setItem(key, JSON.stringify(value));
+      }
+  
+      console.log("Successfully stored data for key:", key);
+    } catch (error) {
+      console.error('Error merging item:', error);
+    }
+  };
 
 export const clear = async () => {
   try {
