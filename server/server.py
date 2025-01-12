@@ -3,10 +3,13 @@ from flask_cors import CORS
 from database import get_database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token
-import requests
 from gpt_wrapper import answer_prompt
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
+from dotenv import load_dotenv
+from os import getenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -14,7 +17,7 @@ CORS(app)
 db = get_database()
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = "super-secret" # TODO: Change this (it's fine for now)
+app.config["JWT_SECRET_KEY"] = getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 # JWT Configuration
@@ -101,8 +104,6 @@ def login():
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
-
-    print(db)
 
     user = db["users"].find_one({"username": username})
 

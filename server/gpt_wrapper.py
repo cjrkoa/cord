@@ -1,9 +1,5 @@
 from openai import OpenAI
 from dotenv import load_dotenv
-# from database import get_database
-#from read_file import read_files, generate_openai_api_messages
-from os import environ
-import hashlib
 
 load_dotenv()
 
