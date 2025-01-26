@@ -13,6 +13,7 @@ import { CloseModalProps } from "@/utils/types";
 import { AuthResponse } from "@/utils/types";
 
 import { useSession } from "../ctx";
+import SERVER_ADDRESS from "@/constants/Connection";
 
 export default function SignIn({ closeModal }: CloseModalProps) {
   const { signIn, storeRefreshToken } = useSession();
@@ -27,7 +28,7 @@ export default function SignIn({ closeModal }: CloseModalProps) {
     password: string
   ) => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
+      const response = await fetch(SERVER_ADDRESS + "login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -15,6 +15,7 @@ import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
 import { mergeItem, getItem, getChatlog, clear } from "@/utils/AsyncStorage";
 import { filterOnlyUserInputs } from "@/utils/functions";
+import SERVER_ADDRESS from "@/constants/Connection";
 
 export default function Index() {
   const colorScheme = useColorScheme();
@@ -118,7 +119,7 @@ export default function Index() {
 
         //const trimmedChats = await filterOnlyUserInputs(updatedUserChats);
 
-        const response = await fetch("http://127.0.0.1:5000/chat", {
+        const response = await fetch(SERVER_ADDRESS + "chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

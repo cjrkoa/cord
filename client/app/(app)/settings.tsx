@@ -15,9 +15,11 @@ import { Colors } from "@/constants/Colors";
 import { useSession } from "../../ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import SERVER_ADDRESS from "@/constants/Connection";
+
 export default function Settings() {
   const colorScheme = useColorScheme();
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [isEnabled, setIsEnabled] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [feedback, setFeedback] = useState("");
   const { signOut, session, refreshSession } = useSession();
@@ -117,12 +119,12 @@ export default function Settings() {
 
   const toggleSwitch = () => {
     setIsEnabled((state) => !state);
-    Appearance.setColorScheme(isEnabled ? "light" : "dark");
+    Appearance.setColorScheme(isEnabled ? "dark" : "light");
   };
 
   const uploadFeedback = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/upload_feedback", {
+      const response = await fetch(SERVER_ADDRESS + "upload_feedback", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

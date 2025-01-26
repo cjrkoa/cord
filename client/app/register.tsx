@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { CloseModalProps } from "@/utils/types";
+import SERVER_ADDRESS from "@/constants/Connection";
 
 export default function Register({ closeModal }: CloseModalProps) {
   const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ export default function Register({ closeModal }: CloseModalProps) {
     email: string,
     password: string
   ) => {
-    const response = await fetch("http://127.0.0.1:5000/register", {
+    const response = await fetch(SERVER_ADDRESS + "register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
