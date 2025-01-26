@@ -1,0 +1,8 @@
+flask===3.0.3
+flask_cors===4.0.1
+werkzeug===3.0.3
+flask_mail===0.10.0
+flask_jwt_extended===4.6.0
+python-dotenv===1.0.1
+openai===1.60.1
+pymongo===4.10.1

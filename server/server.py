@@ -39,6 +39,10 @@ def generate_verification_token(email):
     expiration = timedelta(hours=24)  # Token valid for 24 hours
     return create_access_token(identity=email, expires_delta=expiration)
 
+@app.route("/")
+def health_check():
+    return jsonify({"msg": "Connected Successfully"}), 200
+
 @app.route("/chat", methods=["POST"])
 def chat():
     memory = []
@@ -154,4 +158,4 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
