@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     width: "75%",
     height: "7.5%",
   },
-  textInput: { color: Colors["dark"].text, fontSize: 30 },
+  textInput: { color: Colors["dark"].text, fontSize: 20 },
   text: { color: Colors["dark"].text },
   mainContainer: {
     flex: 1,

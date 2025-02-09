@@ -121,7 +121,7 @@ export default function SignIn({ closeModal }: CloseModalProps) {
 }
 
 const styles = StyleSheet.create({
-  textInput: { color: Colors["dark"].text, fontSize: 30 },
+  textInput: { color: Colors["dark"].text, fontSize: 20 },
   textInputContainer: {
     flexDirection: "column",
     alignItems: "center",

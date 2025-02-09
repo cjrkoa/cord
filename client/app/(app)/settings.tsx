@@ -59,6 +59,12 @@ export default function Settings() {
       width: "45%",
       borderColor: Colors[colorScheme ?? "dark"].tint,
     },
+    switchContainer: {
+      flexDirection: "row",
+      verticalAlign: "bottom",
+      alignItems: "stretch",
+      padding: 10,
+    },
     modal: {
       backgroundColor: Colors[colorScheme ?? "dark"].background,
     },
@@ -69,9 +75,13 @@ export default function Settings() {
 
   const inModalStyles = StyleSheet.create({
     textInput: {
+      textAlignVertical: "top",
+      margin: 5,
+      color: Colors[colorScheme ?? "dark"].text,
+    },
+    textInputContainer: {
       width: "90%",
       height: "65%",
-      textAlignVertical: "top",
       backgroundColor: Colors[colorScheme ?? "dark"].textInput,
       borderColor: Colors[colorScheme ?? "dark"].tint,
       borderWidth: 2.5,
@@ -145,7 +155,8 @@ export default function Settings() {
 
   return (
     <View style={styles.mainContainer}>
-      <View>
+      <Text style={styles.text}>Color Scheme</Text>
+      <View style={styles.switchContainer}>
         <Switch
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
@@ -180,11 +191,13 @@ export default function Settings() {
                 experience. :)
               </Text>
             </View>
-            <TextInput
-              style={inModalStyles.textInput}
-              onChangeText={setFeedback}
-              multiline={true}
-            />
+            <View style={inModalStyles.textInputContainer}>
+              <TextInput
+                onChangeText={setFeedback}
+                style={inModalStyles.textInput}
+                multiline={true}
+              />
+            </View>
             <View style={inModalStyles.buttonContainer}>
               <Text
                 style={inModalStyles.buttonTextLeft}

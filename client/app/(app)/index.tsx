@@ -22,6 +22,7 @@ export default function Index() {
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
   const [chats, setChats] = useState<Message[]>([]);
+  const [userChats, setUserChats] = useState<Message[]>([]);
 
   const styles = StyleSheet.create({
     mainContainer: {
@@ -55,53 +56,6 @@ export default function Index() {
     },
   });
 
-  const dummyChatbot = useCallback(
-    async (input: string) => {
-      try {
-        let updatedUserChats: Message[] = [];
-
-        setChats((prevChats: Message[]) => {
-          updatedUserChats = [
-            ...prevChats,
-            { id: prevChats.length, type: "user", text: input },
-          ];
-          return updatedUserChats;
-        });
-
-        await new Promise((resolve) => setTimeout(resolve, 1250));
-
-        setChats((prevChats: Message[]) => {
-          const updatedChats = [
-            ...prevChats,
-            {
-              id: prevChats.length,
-              type: "bot",
-              text: "Test Response so I don't have to call OpenAI's API",
-            },
-          ];
-          return updatedChats;
-        });
-
-        return {
-          id: chats.length,
-          type: "bot",
-          text: "Test Response so I don't have to call OpenAI's API",
-        };
-      } catch (error) {
-        console.error("Error: " + error);
-        setChats((prevChats) => [
-          ...prevChats,
-          {
-            id: prevChats.length,
-            type: "error",
-            text: "Something went wrong!",
-          },
-        ]);
-      }
-    },
-    [chats]
-  );
-
   const messageChatbot = useCallback(
     async (input: string) => {
       try {
@@ -116,8 +70,6 @@ export default function Index() {
         });
 
         await new Promise((resolve) => setTimeout(resolve, 1250));
-
-        //const trimmedChats = await filterOnlyUserInputs(updatedUserChats);
 
         const response = await fetch(SERVER_ADDRESS + "chat", {
           method: "POST",
@@ -246,7 +198,7 @@ export default function Index() {
             style={styles.text}
             onPress={() => {
               if (input == "CLEAR") {
-                clear();
+                //clear();
                 setChats([]);
               } else if (input.trim().length > 0)
                 messageChatbot(input).then(() => setInput(""));
