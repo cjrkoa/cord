@@ -8,6 +8,7 @@ import {
   TextInput,
   Platform,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 import { Colors } from "@/constants/Colors";
@@ -34,7 +35,7 @@ export default function Settings() {
     signOutButtonContainer: {
       backgroundColor: "red",
       padding: 10,
-      marginTop: "50%",
+      marginTop: "20%",
       width: "45%",
       height: "10%",
       borderWidth: 2,
@@ -55,8 +56,8 @@ export default function Settings() {
       margin: 20,
       borderWidth: 1,
       borderRadius: 5,
-      height: "10%",
-      width: "45%",
+      height: "30%",
+      width: "100%",
       borderColor: Colors[colorScheme ?? "dark"].tint,
     },
     switchContainer: {
@@ -163,15 +164,17 @@ export default function Settings() {
           value={isEnabled}
         />
       </View>
-      <View style={styles.feedbackButtonContainer}>
-        <Text
-          style={styles.text}
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
-          Give Feedback
-        </Text>
+      <View>
+        <Pressable style={styles.feedbackButtonContainer}>
+          <Text
+            style={styles.text}
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
+            Give Feedback
+          </Text>
+        </Pressable>
         <Modal
           animationType="slide"
           transparent={false}

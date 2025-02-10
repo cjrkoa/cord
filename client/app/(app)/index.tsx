@@ -7,6 +7,8 @@ import {
   ScrollView,
   useColorScheme,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,12 +29,16 @@ export default function Index() {
   const styles = StyleSheet.create({
     mainContainer: {
       flex: 1,
-      backgroundColor: Colors[colorScheme ?? "dark"].background,
+      backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
     },
     subContainer: {
       backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
       height: "10%",
       alignItems: "center",
+    },
+    chatContainer: {
+      flex: 1,
+      backgroundColor: Colors[colorScheme ?? "dark"].background,
     },
     textInputContainer: {
       flexDirection: "row",
@@ -150,6 +156,7 @@ export default function Index() {
         <CordLogo paddingBottom={0} size={50} weight={400} />
       </View>
       <ScrollView
+        style={styles.chatContainer}
         ref={scrollViewRef}
         onContentSizeChange={() =>
           scrollViewRef.current?.scrollToEnd({ animated: true })
@@ -181,9 +188,12 @@ export default function Index() {
           />
         )}
       </ScrollView>
-      <View style={styles.textInputContainer}>
+      <KeyboardAvoidingView
+        style={styles.textInputContainer}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+      >
         <TextInput
-          multiline
           style={styles.textInput}
           onChangeText={setInput}
           value={input}
@@ -207,7 +217,7 @@ export default function Index() {
             ◯
           </Text>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
