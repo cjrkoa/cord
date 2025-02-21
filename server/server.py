@@ -66,7 +66,7 @@ def register():
         return jsonify({"msg": "User already exists"}), 409
 
     hashed_password = generate_password_hash(password)
-    db["users"].insert_one({"username": username, "email": email, "password": hashed_password, "is_verified": False})
+    db["users"].insert_one({"username": username, "email": email, "password": hashed_password, "is_verified": True}) # DONT FORGET TO CHANGE THIS BACK TO FALSE AFTER PILOT TEST
 
     # Generate verification token
     token = generate_verification_token(email)
