@@ -6,3 +6,8 @@ flask_jwt_extended===4.6.0
 python-dotenv===1.0.1
 openai===1.60.1
 pymongo===4.10.1
+spacy===3.8.3
+contractions===0.1.73
+numpy===1.23.5
+pandas===2.2.3
+

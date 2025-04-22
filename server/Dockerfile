@@ -11,13 +11,16 @@ WORKDIR /server
 COPY requirements.txt .
 
 # Install any dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m spacy download en_core_web_sm
 
 # Copy the content of the local src directory to the working directory
 COPY server.py .
 COPY database.py .
 COPY gpt_wrapper.py .
 COPY .env .
+COPY compute_sentence_score.py .
+COPY nrc-vad-trust-lexicon.csv .
 
 # Specify the command to run on container start
 CMD [ "python", "./server.py" ]

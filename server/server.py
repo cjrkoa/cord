@@ -3,11 +3,13 @@ from flask_cors import CORS
 from database import get_database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token
-from gpt_wrapper import answer_prompt
+from gpt_wrapper import generate_response, system_prompts
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 from os import getenv
+from compute_sentence_score import compute_sentence_scores, compute_trust_score, is_meaningful, trust_dict, vad_dict, score_to_string
+import random
 
 load_dotenv()
 
@@ -22,7 +24,7 @@ jwt = JWTManager(app)
 
 # JWT Configuration
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 900 # 15 minute expiration
-app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 86400 # 1 day expiration
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = 604800 # 7 day expiration
 
 # Configure Flask-Mail
 app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io'  # e.g., 'smtp.gmail.com'
@@ -45,6 +47,27 @@ def health_check():
 
 @app.route("/chat", methods=["POST"])
 def chat():
+    input = request.get_json()["message"]
+    username = request.get_json()["username"]
+    affect = {}
+    
+    user = db["users"].find_one({"username": username})
+    affect_raw = user.get("affect_raw", [])
+
+    # only compute affect of meaningful messages because attempting to compute score of short strings runs the risk of trying to compute score of an empty string (this will crash the server)
+    if is_meaningful(input):
+        affect = compute_sentence_scores(input, vad_dict, weight_distribution="quadratic")
+        if affect_raw is not None:
+            affect["trust"] = compute_trust_score(input, len(affect_raw), trust_dict)
+        else: affect["trust"] = compute_trust_score(input, 0, trust_dict)
+    else:
+        affect = {
+            "valence": 0.5,
+            "arousal": 0.5,
+            "dominance": 0.5,
+            "trust": 0,
+        }
+
     memory = []
     for item in request.get_json()["memory"]:
         sys_prompt = {
@@ -53,7 +76,25 @@ def chat():
         }
         memory.append(sys_prompt)
 
-    return answer_prompt(memory, request.get_json()["message"])
+    response = []
+    response.append(generate_response(memory, input, system_prompts["old"]))
+
+    # self-care directive for trust building
+    if random.random() <= 0.03 and affect["valence"] < 0.55 and is_meaningful(input):
+        response.append(generate_response([], input, "Provide a relevant one sentence self-care directive to the user based on their prompt. Show warmth."))
+    
+    if affect_raw is not None:
+        affect_raw.append(score_to_string(affect))
+    else: affect_raw = [score_to_string(affect)]
+
+    if is_meaningful(input):
+        db["users"].find_one_and_update(
+            {"username": username}, 
+            {"$set": {"affect_raw": affect_raw}}
+        )
+
+    return jsonify({"message": response})
+
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -66,13 +107,13 @@ def register():
         return jsonify({"msg": "User already exists"}), 409
 
     hashed_password = generate_password_hash(password)
-    db["users"].insert_one({"username": username, "email": email, "password": hashed_password, "is_verified": True}) # DONT FORGET TO CHANGE THIS BACK TO FALSE AFTER PILOT TEST
+    db["users"].insert_one({"username": username, "email": email, "password": hashed_password, "is_verified": True, "affect_profile": score_to_string({"valence": 0.5, "arousal": 0.5, "dominance": 0.5, "trust": 0.5}), "affect_raw": []}) # DONT FORGET TO CHANGE is_verified BACK TO FALSE AFTER PILOT TEST
 
     # Generate verification token
     token = generate_verification_token(email)
     
     # Construct verification link
-    verification_link = f'http://localhost:5000/verify/{token}'
+    verification_link = f'https://flask-service.dkbedazshkb3y.us-east-1.cs.amazonlightsail.com/verify/{token}'
 
     # Send verification email
     msg = Message("Verify your email address", recipients=[email])
@@ -95,7 +136,7 @@ def verify_email(token):
     if user:
         if not user.get('is_verified', False):
             # Update the user's verification status
-            db["users"].update_one({'email': email}, {'$set': {'is_verified': True}})
+            db["users"].update_one({"email": email}, {"$set": {"is_verified": True}})
             return jsonify({"msg": "Email verified, you can now log in"}), 200
         else:
             return jsonify({"msg": "User already verified"}), 400
@@ -106,7 +147,6 @@ def verify_email(token):
 def login():
     data = request.get_json()
     username = data.get("username")
-    email = data.get("email")
     password = data.get("password")
 
     user = db["users"].find_one({"username": username})
@@ -126,7 +166,11 @@ def login():
 def refresh():
     current_user = get_jwt_identity()
     new_access_token = create_access_token(identity=current_user)
-    return jsonify({"access_token": new_access_token}), 200
+    new_refresh_token = create_refresh_token(identity=current_user)
+    return jsonify({
+        "access_token": new_access_token,
+        "refresh_token": new_refresh_token
+    }), 200
 
 @app.route("/upload_conversation", methods=["POST"])
 @jwt_required()
@@ -140,12 +184,24 @@ def upload_conversation():
 @app.route("/upload_feedback", methods=["POST"])
 @jwt_required()
 def upload_feedback():
-    print(request.get_json())
     try:
         db["feedback"].insert_one(request.get_json())
         return jsonify({"msg": "Feedback uploaded successfully"}), 201
     except:
         return jsonify({"msg": "Error uploading feedback"}), 400
+
+@app.route("/evaluate_text_emotion", methods=["POST"])
+@jwt_required()
+def evaluate_text_emotion():
+    #current_user = get_jwt_identity()
+    input = request.get_json()["message"]
+    if is_meaningful(input):
+        emotion = compute_sentence_scores(input, vad_dict)
+        emotion["trust"] = compute_trust_score(input, 0, trust_dict)
+    
+        return jsonify(emotion)
+    else:
+        return jsonify({"msg": "Affect was not calculated because message was not meaningful"}), 200
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.

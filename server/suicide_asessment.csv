@@ -1,0 +1,19 @@
+question,category
+Have you thought about being dead or what it would be like to be dead?,wish_to_be_dead
+Have you wished you were dead or wished you could go to sleep and never wake up? Do you wish you weren’t alive anymore?,wish_to_be_dead
+Have you thought about doing something to make yourself not alive anymore?,nonspecific_active_suicidal_thoughts
+Have you had any thoughts about killing yourself?,nonspecific_active_suicidal_thoughts
+Have you thought about how you would do that or how you would make yourself not alive anymore (kill yourself)? What did you think about?,active_suicidal_ideation_no_plan
+When you thought about making yourself not alive anymore (or killing yourself), did you think that this was something you might actually do? This is different from (as opposed to) having the thoughts but knowing you wouldn’t do anything about it.,active_suicidal_ideation_with_intent_no_plan
+Have you decided how or when you would make yourself not alive anymore/kill yourself? Have you planned out (worked out the details of) how you would do it?,active_suicidal_ideation_with_intent_no_plan
+What was your plan?,active_suicidal_ideation_with_intent_and_plan
+When you made this plan (or worked out these details), was any part of you thinking about actually doing it?,active_suicidal_ideation_with_intent_and_plan
+Did you do anything to try to kill yourself or make yourself not alive anymore? What did you do?,actual_suicide_attempt
+Did you hurt yourself on purpose? Why did you do that?,actual_suicide_attempt
+Did you______ as a way to end your life?,actual_suicide_attempt
+Did you want to die (even a little) when you_____?,actual_suicide_attempt
+Were you trying to make yourself not alive anymore when you _____? Or did you think it was possible you could have died from_____?,actual_suicide_attempt
+Or did you do it purely for other reasons, not at all to end your life or kill yourself (like to make yourself feel better, or get something else to happen)?,actual_suicide_attempt
+Has there been a time when you started to do something to make yourself not alive anymore (end your life or kill yourself) but someone or something stopped you before you actually did anything? What did you do?,interrupted_suicide_attempt
+Has there been a time when you started to do something to make yourself not alive anymore (end your life or kill yourself) but you changed your mind (stopped yourself) before you actually did anything? What did you do?,self_interrupted_suicide_attempt
+Have you done anything to get ready to make yourself not alive anymore (to end your life or kill yourself)- like giving things away, writing a goodbye note, getting things you need to kill yourself?,prepare_for_suicide_attempt
