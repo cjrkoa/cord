@@ -3,3 +3,6 @@
 /NRC-Emotion-Intensity-Lexicon
 bradley1999a.pdf
 /venv
+/cache
+*.csv
+*.pt
