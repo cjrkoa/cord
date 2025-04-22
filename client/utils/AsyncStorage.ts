@@ -1,3 +1,4 @@
+import { parse } from '@babel/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setItem = async (key: string, value: any) => {
@@ -22,24 +23,20 @@ export const getChatlog = async () => {
     try {
         const value = await AsyncStorage.getItem("chatlog");
         const parsedValue = value != null ? JSON.parse(value) : null;
+        console.log(parsedValue);
 
         if (Array.isArray(parsedValue)){
             return parsedValue;
         }
-
-        return [
-            { id: 0, type: "bot", text: "Hello! :)" },
-            {
-              id: 1,
-              type: "bot",
-              text: "I'm Cord, your emotional support chatbot.",
-            },
-            {
-              id: 2,
-              type: "bot",
-              text: "How are you feeling today?",
-            },
-        ];
+        else {
+            return [
+                { id: 0, type: "bot", text: "Hi! I'm Eccia :)" },
+                { id: 1, type: "bot", text: "I'd like to start by thanking you for coming to talk to me today, it's brave of you to take a step and show up authentically."},
+                { id: 2, type: "bot", text: "We don't know all that much about each other yet, and that's okay. We'll learn more about one another as time goes on. No need to rush anything, we have all the time in the world..." },
+                { id: 3, type: "bot", text: "Regardless of why you're here, or who you are, I want to offer you compassionate connection. No one's perfect, and I'm not claiming to be either (I'm not even alive!), but I promise to understand and support you to the best of my ability, however I can." },
+                { id: 4, type: "bot", text: "I am curious though, what brings you here?" },
+            ];
+        }
     } catch (error) {
         console.error('Error getting chatlog', error);
         return [];

@@ -6,17 +6,23 @@ const AuthContext = createContext<{
   storeRefreshToken: (refresh_token: string) => boolean;
   signOut: () => void;
   refreshSession: () => Promise<boolean>;
+  storeUsername: (username: string) => boolean;
+  getUsername: () => string | null;
   session?: string | null;
   isLoading: boolean;
   refresh?: string | null;
+  username?: string | null;
 }>({
   signIn: () => false,
   storeRefreshToken: () => false,
   signOut: () => null,
   refreshSession: () => Promise.resolve(false),
+  storeUsername: () => false,
+  getUsername: () => null,
   session: null,
   isLoading: false,
   refresh: null,
+  username: null,
 });
 
 // This hook can be used to access the user info.
@@ -34,6 +40,7 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
   const [refresh, setRefresh] = useStorageState("refresh");
+  const [[, username], setUsername] = useStorageState("username");
 
   return (
     <AuthContext.Provider
@@ -48,6 +55,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         signOut: () => {
           setSession(null);
           setRefresh(null);
+          setUsername(null);
         },
         storeRefreshToken: (refresh_token: string) => {
           if (refresh_token != null) {
@@ -55,6 +63,16 @@ export function SessionProvider({ children }: PropsWithChildren) {
             return true;
           }
           return false;
+        },
+        storeUsername: (username: string) => {
+          if (username != null) {
+            setUsername(username);
+            return true;
+          }
+          return false;
+        },
+        getUsername: () => {
+          return username ?? null;
         },
         refreshSession: async () => {
           try {
@@ -68,7 +86,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
             if (response.ok) {
               const json = await response.json();
-              setSession(json.access_token); // Save new token
+              setSession(json.access_token);
+              setRefresh(json.refresh_token);
               return true;
             } else {
               console.error("Failed to refresh token");

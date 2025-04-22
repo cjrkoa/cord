@@ -16,17 +16,12 @@ import { useSession } from "../ctx";
 import SERVER_ADDRESS from "@/constants/Connection";
 
 export default function SignIn({ closeModal }: CloseModalProps) {
-  const { signIn, storeRefreshToken } = useSession();
+  const { signIn, storeRefreshToken, storeUsername } = useSession();
 
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {
+  const handleSignIn = async (username: string, password: string) => {
     try {
       const response = await fetch(SERVER_ADDRESS + "login", {
         method: "POST",
@@ -35,7 +30,6 @@ export default function SignIn({ closeModal }: CloseModalProps) {
         },
         body: JSON.stringify({
           username,
-          email,
           password,
         }),
       });
@@ -54,7 +48,6 @@ export default function SignIn({ closeModal }: CloseModalProps) {
   const handleSignInPress = async () => {
     const res: AuthResponse | number | unknown = await handleSignIn(
       username,
-      email,
       password
     );
 
@@ -68,6 +61,7 @@ export default function SignIn({ closeModal }: CloseModalProps) {
     ) {
       signIn(res.access_token);
       storeRefreshToken(res.refresh_token);
+      storeUsername(username);
       Appearance.setColorScheme("dark");
       router.replace("/");
     } else console.log("Error: Couldn't Sign In");
@@ -80,14 +74,6 @@ export default function SignIn({ closeModal }: CloseModalProps) {
           style={styles.textInput}
           placeholder="username"
           onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-      </View>
-      <View style={styles.textInputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="email"
-          onChangeText={setEmail}
           autoCapitalize="none"
         />
       </View>

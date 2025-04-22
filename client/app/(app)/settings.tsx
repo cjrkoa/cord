@@ -194,13 +194,6 @@ export default function Settings() {
                 experience. :)
               </Text>
             </View>
-            <View style={inModalStyles.textInputContainer}>
-              <TextInput
-                onChangeText={setFeedback}
-                style={inModalStyles.textInput}
-                multiline={true}
-              />
-            </View>
             <View style={inModalStyles.buttonContainer}>
               <Text
                 style={inModalStyles.buttonTextLeft}
@@ -225,6 +218,13 @@ export default function Settings() {
               >
                 Submit
               </Text>
+            </View>
+            <View style={inModalStyles.textInputContainer}>
+              <TextInput
+                onChangeText={setFeedback}
+                style={inModalStyles.textInput}
+                multiline={true}
+              />
             </View>
           </View>
         </Modal>

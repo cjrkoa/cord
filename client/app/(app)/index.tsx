@@ -15,11 +15,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Message, MessageSchema } from "@/utils/types";
 import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
-import { mergeItem, getItem, getChatlog, clear } from "@/utils/AsyncStorage";
+import { setItem, getChatlog, clear } from "@/utils/AsyncStorage";
 import { filterOnlyUserInputs } from "@/utils/functions";
 import SERVER_ADDRESS from "@/constants/Connection";
+import { useSession } from "../../ctx";
 
 export default function Index() {
+  const { getUsername, session, refreshSession, signOut } = useSession();
+  const username = getUsername();
   const colorScheme = useColorScheme();
   const scrollViewRef = useRef<ScrollView>(null);
   const [input, setInput] = useState("");
@@ -62,6 +65,28 @@ export default function Index() {
     },
   });
 
+  const getEmotionMetadata = async (input: string) => {
+    try {
+      const response = await fetch(SERVER_ADDRESS + "evaluate_text_emotion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session}`,
+        },
+        body: JSON.stringify({
+          message: input,
+        }),
+      });
+
+      const json = await response.json();
+      console.log(json);
+      return json;
+    } catch (error) {
+      console.error("Error: " + error);
+      return false;
+    }
+  };
+
   const messageChatbot = useCallback(
     async (input: string) => {
       try {
@@ -81,10 +106,12 @@ export default function Index() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${session}`,
           },
           body: JSON.stringify({
             message: input,
             memory: updatedUserChats,
+            username: username,
           }),
         });
 
@@ -95,19 +122,21 @@ export default function Index() {
         const json = await response.json();
         console.log(json);
 
-        setChats((prevChats: Message[]) => {
-          const updatedChats = [
-            ...prevChats,
-            {
-              id: prevChats.length,
-              type: "bot",
-              text: json["message"],
-            },
-          ];
-          return updatedChats;
+        json["message"].forEach((message: string, index: number) => {
+          setChats((prevChats: Message[]) => {
+            const updatedChats = [
+              ...prevChats,
+              {
+                id: prevChats.length,
+                type: "bot",
+                text: message,
+              },
+            ];
+            return updatedChats;
+          });
         });
 
-        return json["message"];
+        return true;
       } catch (error) {
         console.error("Error: " + error);
         setChats((prevChats) => [
@@ -118,6 +147,7 @@ export default function Index() {
             text: "Something went wrong!",
           },
         ]);
+        return false;
       }
     },
     [chats]
@@ -129,7 +159,7 @@ export default function Index() {
     }
   }, [chats]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchChatlog = async () => {
       const chatlog = await getChatlog();
       if (chatlog) {
@@ -140,15 +170,6 @@ export default function Index() {
     fetchChatlog();
     console.log("fetched");
   }, []);
-
-  useEffect(() => {
-    if (chats.length != 0) {
-      return () => {
-        mergeItem("chatlog", chats);
-        console.log("merged");
-      };
-    }
-  }, [chats]);*/
 
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -198,20 +219,47 @@ export default function Index() {
           onChangeText={setInput}
           value={input}
           onSubmitEditing={async (e) => {
-            if (input.trim().length > 0)
-              await messageChatbot(input).then(() => setInput(""));
+            if (input.trim().length > 0) {
+              const success = await messageChatbot(input);
+
+              if (!success) {
+                const refreshed = await refreshSession();
+                if (refreshed) {
+                  await messageChatbot(input);
+                } else {
+                  signOut();
+                }
+              }
+              await setItem("chatlog", chats).then(() =>
+                console.log("chatlog saved")
+              );
+              setInput("");
+            }
           }}
           placeholder="Enter your Message Here..."
         />
         <View style={{ justifyContent: "center" }}>
           <Text
             style={styles.text}
-            onPress={() => {
+            onPress={async (e) => {
               if (input == "CLEAR") {
-                //clear();
-                setChats([]);
-              } else if (input.trim().length > 0)
-                messageChatbot(input).then(() => setInput(""));
+                await clear().then(() => setChats([]));
+              } else if (input.trim().length > 0) {
+                const success = await messageChatbot(input);
+
+                if (!success) {
+                  const refreshed = await refreshSession();
+                  if (refreshed) {
+                    await messageChatbot(input);
+                  } else {
+                    signOut();
+                  }
+                }
+                await setItem("chatlog", chats).then(() =>
+                  console.log("chatlog saved")
+                );
+                setInput("");
+              }
             }}
           >
             ◯

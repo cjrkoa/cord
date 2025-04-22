@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, Image } from "react-native";
 import { Redirect, Stack } from "expo-router";
 
 import { useSession } from "../../ctx";
@@ -16,7 +16,7 @@ export default function AppLayout() {
 
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Image source={require("@/assets/images/eccia-loading.png")} />;
   }
 
   // Only require authentication within the (app) group's layout as users

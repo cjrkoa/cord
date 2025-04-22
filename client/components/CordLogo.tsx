@@ -16,7 +16,7 @@ export default function CordLogo(props: CordLogoProps) {
           fontWeight: props.weight,
         }}
       >
-        Co
+        Ecc
       </Text>
       <Text
         style={{
@@ -25,7 +25,7 @@ export default function CordLogo(props: CordLogoProps) {
           fontWeight: props.weight,
         }}
       >
-        rd
+        ia
       </Text>
     </View>
   );
