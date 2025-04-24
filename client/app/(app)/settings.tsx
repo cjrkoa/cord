@@ -15,15 +15,19 @@ import { Colors } from "@/constants/Colors";
 
 import { useSession } from "../../ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AuthResponse } from "@/utils/types";
 
 import SERVER_ADDRESS from "@/constants/Connection";
 
 export default function Settings() {
   const colorScheme = useColorScheme();
   const [isEnabled, setIsEnabled] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const { signOut, session, refreshSession } = useSession();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { signIn, signOut, session, refreshSession } = useSession();
 
   const styles = StyleSheet.create({
     mainContainer: {
@@ -35,9 +39,8 @@ export default function Settings() {
     signOutButtonContainer: {
       backgroundColor: "red",
       padding: 10,
-      marginTop: "20%",
       width: "45%",
-      height: "10%",
+      margin: 10,
       borderWidth: 2,
       borderRadius: 20,
       borderColor: Colors[colorScheme ?? "dark"].tint,
@@ -53,10 +56,8 @@ export default function Settings() {
       padding: 10,
       alignItems: "center",
       justifyContent: "center",
-      margin: 20,
       borderWidth: 1,
       borderRadius: 5,
-      height: "30%",
       width: "100%",
       borderColor: Colors[colorScheme ?? "dark"].tint,
     },
@@ -128,9 +129,84 @@ export default function Settings() {
     },
   });
 
+  const deleteStyles = StyleSheet.create({
+    textInput: { color: Colors["dark"].text, fontSize: 20 },
+    textInputContainer: {
+      flexDirection: "column",
+      alignItems: "center",
+      backgroundColor: Colors["dark"].textInput,
+      borderColor: Colors["dark"].tint,
+      borderWidth: 1,
+      borderRadius: 0,
+      padding: 5,
+      margin: 2.5,
+      width: "75%",
+      height: "7.5%",
+    },
+    mainContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: Colors["dark"].tabBarBackground,
+    },
+    text: { color: Colors["dark"].text },
+  });
+
   const toggleSwitch = () => {
     setIsEnabled((state) => !state);
     Appearance.setColorScheme(isEnabled ? "dark" : "light");
+  };
+
+  // TODO: refactor code eventually so this handlesignin isn't copy/pasted twice
+  const handleSignIn = async (username: string, password: string) => {
+    try {
+      const response = await fetch(SERVER_ADDRESS + "login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        const json: AuthResponse = await response.json();
+        return json;
+      } else {
+        return response.status;
+      }
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const handleSignInPress = async () => {
+    const res: AuthResponse | number | unknown = await handleSignIn(
+      username,
+      password
+    );
+
+    if (
+      typeof res === "object" &&
+      res != null &&
+      "access_token" in res &&
+      "refresh_token" in res &&
+      typeof res.access_token === "string" &&
+      typeof res.refresh_token === "string"
+    ) {
+      const response = await fetch(SERVER_ADDRESS + "delete_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${res.access_token}`,
+        },
+        body: JSON.stringify({
+          username,
+        }),
+      });
+    } else console.log("Error: Couldn't Sign In");
   };
 
   const uploadFeedback = async () => {
@@ -169,19 +245,90 @@ export default function Settings() {
           <Text
             style={styles.text}
             onPress={() => {
-              setModalVisible(true);
+              setFeedbackModalVisible(true);
             }}
           >
             Give Feedback
           </Text>
         </Pressable>
+      </View>
+      <View>
+        <Pressable style={styles.signOutButtonContainer}>
+          <Text
+            style={styles.signOutText}
+            onPress={() => {
+              // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
+              signOut();
+            }}
+          >
+            Sign Out
+          </Text>
+        </Pressable>
+      </View>
+      <View>
+        <Pressable style={styles.feedbackButtonContainer}>
+          <Text
+            style={styles.text}
+            onPress={() => {
+              setDeleteModalVisible(true);
+            }}
+          >
+            Delete Account
+          </Text>
+        </Pressable>
         <Modal
           animationType="slide"
           transparent={false}
-          visible={modalVisible}
+          visible={deleteModalVisible}
           style={styles.modal}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setDeleteModalVisible(!feedbackModalVisible);
+          }}
+        >
+          <View style={deleteStyles.mainContainer}>
+            <View style={deleteStyles.textInputContainer}>
+              <TextInput
+                style={deleteStyles.textInput}
+                placeholder="username"
+                onChangeText={setUsername}
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={deleteStyles.textInputContainer}>
+              <TextInput
+                style={deleteStyles.textInput}
+                placeholder="password"
+                onChangeText={setPassword}
+                autoCapitalize="none"
+              />
+            </View>
+            <Text
+              style={deleteStyles.text}
+              onPress={() => {
+                handleSignInPress();
+                setDeleteModalVisible(false);
+                signOut();
+              }}
+            >
+              Delete Account
+            </Text>
+            <Text
+              style={styles.text}
+              onPress={() => {
+                setDeleteModalVisible(false);
+              }}
+            >
+              Cancel
+            </Text>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={feedbackModalVisible}
+          style={styles.modal}
+          onRequestClose={() => {
+            setFeedbackModalVisible(!feedbackModalVisible);
           }}
         >
           <View style={inModalStyles.mainContainer}>
@@ -198,7 +345,7 @@ export default function Settings() {
               <Text
                 style={inModalStyles.buttonTextLeft}
                 onPress={() => {
-                  setModalVisible(false);
+                  setFeedbackModalVisible(false);
                 }}
               >
                 Cancel
@@ -213,7 +360,7 @@ export default function Settings() {
                       await uploadFeedback(); // Retry uploading feedback if session refresh succeeds
                     }
                   }
-                  setModalVisible(false);
+                  setFeedbackModalVisible(false);
                 }}
               >
                 Submit
@@ -228,17 +375,6 @@ export default function Settings() {
             </View>
           </View>
         </Modal>
-      </View>
-      <View style={styles.signOutButtonContainer}>
-        <Text
-          style={styles.signOutText}
-          onPress={() => {
-            // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
-            signOut();
-          }}
-        >
-          Sign Out
-        </Text>
       </View>
     </View>
   );
