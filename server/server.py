@@ -161,6 +161,18 @@ def login():
     
     return jsonify({"msg": "Invalid credentials"}), 401
 
+@app.route("/delete_user", methods=["POST"])
+def delete_user():
+    data = request.get_json()
+    username = data.get("username")
+
+    user = db["users"].find_one({"username": username})
+
+    if user:
+        db["users"].delete_one(user)
+        return jsonify({"msg": "User sucessfully removed from database"}), 200
+    return jsonify({"msg": "Invalid username"}), 400
+
 @app.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)  # Only allow refresh tokens
 def refresh():
