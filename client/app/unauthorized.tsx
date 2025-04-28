@@ -27,22 +27,20 @@ export default function Unauthorized() {
         <Pressable
           style={styles.pressable}
           onPress={() => {
+            setSignInVisible(false);
+            setRegisterVisible(true);
+          }}
+        >
+          <Text style={styles.text}>Register</Text>
+        </Pressable>
+        <Pressable
+          style={styles.pressable}
+          onPress={() => {
             setRegisterVisible(false);
             setSignInVisible(true);
           }}
         >
           <Text style={styles.text}>Login</Text>
-        </Pressable>
-        <Pressable style={styles.pressable}>
-          <Text
-            style={styles.text}
-            onPress={() => {
-              setSignInVisible(false);
-              setRegisterVisible(true);
-            }}
-          >
-            Register
-          </Text>
         </Pressable>
       </View>
       <Modal
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
     height: "25%",
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 25,
+    marginHorizontal: 20,
     borderColor: Colors["dark"].tint,
     borderWidth: 2,
     borderRadius: 20,

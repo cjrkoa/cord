@@ -6,7 +6,6 @@ import {
   useColorScheme,
   Modal,
   TextInput,
-  Platform,
   StyleSheet,
   Pressable,
 } from "react-native";
@@ -22,12 +21,10 @@ import SERVER_ADDRESS from "@/constants/Connection";
 export default function Settings() {
   const colorScheme = useColorScheme();
   const [isEnabled, setIsEnabled] = useState(false);
-  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [feedback, setFeedback] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, signOut, session, refreshSession } = useSession();
+  const { signOut, session, refreshSession } = useSession();
 
   const styles = StyleSheet.create({
     mainContainer: {
@@ -36,36 +33,33 @@ export default function Settings() {
       alignItems: "center",
       backgroundColor: Colors[colorScheme ?? "dark"].background,
     },
-    signOutButtonContainer: {
+    deleteButtonContainer: {
       backgroundColor: "red",
       padding: 10,
-      width: "45%",
+      width: "50%",
+      height: "10%",
       margin: 10,
-      borderWidth: 2,
-      borderRadius: 20,
+      borderWidth: 1,
+      borderRadius: 5,
       borderColor: Colors[colorScheme ?? "dark"].tint,
       alignItems: "center",
       justifyContent: "center",
     },
-    signOutText: {
+    deleteButtonText: {
       color: Colors[colorScheme ?? "dark"].text,
       fontWeight: "bold",
     },
-    feedbackButtonContainer: {
+    signOutButtonContainer: {
       backgroundColor: Colors[colorScheme ?? "dark"].textInput,
       padding: 10,
-      alignItems: "center",
-      justifyContent: "center",
+      width: "50%",
+      height: "10%",
+      margin: 10,
       borderWidth: 1,
       borderRadius: 5,
-      width: "100%",
+      alignItems: "center",
+      justifyContent: "center",
       borderColor: Colors[colorScheme ?? "dark"].tint,
-    },
-    switchContainer: {
-      flexDirection: "row",
-      verticalAlign: "bottom",
-      alignItems: "stretch",
-      padding: 10,
     },
     modal: {
       backgroundColor: Colors[colorScheme ?? "dark"].background,
@@ -73,59 +67,11 @@ export default function Settings() {
     text: {
       color: Colors[colorScheme ?? "dark"].text,
     },
-  });
-
-  const inModalStyles = StyleSheet.create({
-    textInput: {
-      textAlignVertical: "top",
-      margin: 5,
-      color: Colors[colorScheme ?? "dark"].text,
-    },
-    textInputContainer: {
-      width: "90%",
-      height: "65%",
-      backgroundColor: Colors[colorScheme ?? "dark"].textInput,
-      borderColor: Colors[colorScheme ?? "dark"].tint,
-      borderWidth: 2.5,
-      borderRadius: 5,
-      marginBottom: 25,
-      color: Colors[colorScheme ?? "dark"].text,
-    },
-    mainContainer: {
-      backgroundColor: Colors[colorScheme ?? "dark"].background,
-      paddingTop: Platform.OS === "ios" ? 20 : 0,
-      alignItems: "center",
+    buttonsContainer: {
       flex: 1,
-    },
-    subContainer: {
-      backgroundColor: Colors[colorScheme ?? "dark"].tabBarBackground,
-      marginBottom: 25,
       width: "100%",
-      alignItems: "center",
-    },
-    buttonContainer: {
-      flexDirection: "row",
       justifyContent: "center",
-    },
-    buttonTextLeft: {
-      paddingRight: 50,
-      color: Colors[colorScheme ?? "dark"].text,
-    },
-    buttonTextRight: {
-      paddingLeft: 50,
-      color: Colors[colorScheme ?? "dark"].text,
-    },
-    feedbackText: {
-      color: Colors["dark"].text,
-      paddingBottom: 10,
-      paddingTop: 5,
-      marginHorizontal: 20,
-    },
-    title: {
-      color: Colors["dark"].text,
-      fontWeight: "bold",
-      alignSelf: "center",
-      paddingTop: 10,
+      alignItems: "center",
     },
   });
 
@@ -150,6 +96,27 @@ export default function Settings() {
       backgroundColor: Colors["dark"].tabBarBackground,
     },
     text: { color: Colors["dark"].text },
+    pressable: {
+      backgroundColor: Colors["dark"].background,
+      width: "35%",
+      height: "15%",
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: 10,
+      marginTop: 10,
+      borderColor: Colors["dark"].tint,
+      borderWidth: 2,
+      borderRadius: 20,
+    },
+    spacer: {
+      height: "40%",
+    },
+    buttonsContainer: {
+      height: "40%",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignContent: "center",
+    },
   });
 
   const toggleSwitch = () => {
@@ -209,72 +176,37 @@ export default function Settings() {
     } else console.log("Error: Couldn't Sign In");
   };
 
-  const uploadFeedback = async () => {
-    try {
-      const response = await fetch(SERVER_ADDRESS + "upload_feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session}`,
-        },
-        body: JSON.stringify({
-          feedback: feedback,
-        }),
-      });
-      if (response.ok) {
-        return true;
-      }
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.text}>Color Scheme</Text>
-      <View style={styles.switchContainer}>
-        <Switch
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
-      </View>
-      <View>
-        <Pressable style={styles.feedbackButtonContainer}>
-          <Text
-            style={styles.text}
-            onPress={() => {
-              setFeedbackModalVisible(true);
-            }}
-          >
-            Give Feedback
+    <SafeAreaView style={styles.mainContainer}>
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={styles.signOutButtonContainer}
+          onPress={() => {
+            toggleSwitch();
+          }}
+        >
+          <Text style={styles.text}>
+            {Appearance.getColorScheme() === "dark"
+              ? "Dark Mode"
+              : "Light Mode"}
           </Text>
         </Pressable>
-      </View>
-      <View>
-        <Pressable style={styles.signOutButtonContainer}>
-          <Text
-            style={styles.signOutText}
-            onPress={() => {
-              // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
-              signOut();
-            }}
-          >
-            Sign Out
-          </Text>
+        <Pressable
+          style={styles.signOutButtonContainer}
+          onPress={() => {
+            // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
+            signOut();
+          }}
+        >
+          <Text style={styles.text}>Sign Out</Text>
         </Pressable>
-      </View>
-      <View>
-        <Pressable style={styles.feedbackButtonContainer}>
-          <Text
-            style={styles.text}
-            onPress={() => {
-              setDeleteModalVisible(true);
-            }}
-          >
-            Delete Account
-          </Text>
+        <Pressable
+          style={styles.deleteButtonContainer}
+          onPress={() => {
+            setDeleteModalVisible(true);
+          }}
+        >
+          <Text style={styles.deleteButtonText}>Delete Account</Text>
         </Pressable>
         <Modal
           animationType="slide"
@@ -282,10 +214,11 @@ export default function Settings() {
           visible={deleteModalVisible}
           style={styles.modal}
           onRequestClose={() => {
-            setDeleteModalVisible(!feedbackModalVisible);
+            setDeleteModalVisible(!deleteModalVisible);
           }}
         >
           <View style={deleteStyles.mainContainer}>
+            <View style={deleteStyles.spacer} />
             <View style={deleteStyles.textInputContainer}>
               <TextInput
                 style={deleteStyles.textInput}
@@ -302,80 +235,29 @@ export default function Settings() {
                 autoCapitalize="none"
               />
             </View>
-            <Text
-              style={deleteStyles.text}
-              onPress={() => {
-                handleSignInPress();
-                setDeleteModalVisible(false);
-                signOut();
-              }}
-            >
-              Delete Account
-            </Text>
-            <Text
-              style={styles.text}
-              onPress={() => {
-                setDeleteModalVisible(false);
-              }}
-            >
-              Cancel
-            </Text>
-          </View>
-        </Modal>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={feedbackModalVisible}
-          style={styles.modal}
-          onRequestClose={() => {
-            setFeedbackModalVisible(!feedbackModalVisible);
-          }}
-        >
-          <View style={inModalStyles.mainContainer}>
-            <View style={inModalStyles.subContainer}>
-              <Text style={inModalStyles.title}>Feedback</Text>
-              <Text style={inModalStyles.feedbackText}>
-                Thank you for taking the time to share your feedback! Your input
-                is incredibly valuable in helping us better understand your
-                needs and continue improving to provide the best possible
-                experience. :)
-              </Text>
-            </View>
-            <View style={inModalStyles.buttonContainer}>
-              <Text
-                style={inModalStyles.buttonTextLeft}
+            <View style={deleteStyles.buttonsContainer}>
+              <Pressable
+                style={deleteStyles.pressable}
                 onPress={() => {
-                  setFeedbackModalVisible(false);
+                  setDeleteModalVisible(false);
                 }}
               >
-                Cancel
-              </Text>
-              <Text
-                style={inModalStyles.buttonTextRight}
-                onPress={async () => {
-                  const success = await uploadFeedback(); // Wait for the result of uploadFeedback
-                  if (!success) {
-                    const refreshed = await refreshSession(); // Attempt to refresh the session
-                    if (refreshed) {
-                      await uploadFeedback(); // Retry uploading feedback if session refresh succeeds
-                    }
-                  }
-                  setFeedbackModalVisible(false);
+                <Text style={styles.text}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={deleteStyles.pressable}
+                onPress={() => {
+                  handleSignInPress();
+                  setDeleteModalVisible(false);
+                  signOut();
                 }}
               >
-                Submit
-              </Text>
-            </View>
-            <View style={inModalStyles.textInputContainer}>
-              <TextInput
-                onChangeText={setFeedback}
-                style={inModalStyles.textInput}
-                multiline={true}
-              />
+                <Text style={deleteStyles.text}>Delete Account</Text>
+              </Pressable>
             </View>
           </View>
         </Modal>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

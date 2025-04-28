@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Text,
   View,
-  Button,
   TextInput,
   ScrollView,
   useColorScheme,
@@ -12,11 +11,10 @@ import {
 } from "react-native";
 import { MessageContainer } from "@/components/Containers";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Message, MessageSchema } from "@/utils/types";
+import { Message } from "@/utils/types";
 import { Colors } from "@/constants/Colors";
 import CordLogo from "@/components/CordLogo";
 import { setItem, getChatlog, clear } from "@/utils/AsyncStorage";
-import { filterOnlyUserInputs } from "@/utils/functions";
 import SERVER_ADDRESS from "@/constants/Connection";
 import { useSession } from "../../ctx";
 
@@ -143,8 +141,8 @@ export default function Index() {
           ...prevChats,
           {
             id: prevChats.length,
-            type: "error",
-            text: "Something went wrong!",
+            type: "bot",
+            text: "Sorry! Something went wrong.",
           },
         ]);
         return false;
@@ -221,15 +219,6 @@ export default function Index() {
           onSubmitEditing={async (e) => {
             if (input.trim().length > 0) {
               const success = await messageChatbot(input);
-
-              if (!success) {
-                const refreshed = await refreshSession();
-                if (refreshed) {
-                  await messageChatbot(input);
-                } else {
-                  signOut();
-                }
-              }
               await setItem("chatlog", chats).then(() =>
                 console.log("chatlog saved")
               );
@@ -246,15 +235,6 @@ export default function Index() {
                 await clear().then(() => setChats([]));
               } else if (input.trim().length > 0) {
                 const success = await messageChatbot(input);
-
-                if (!success) {
-                  const refreshed = await refreshSession();
-                  if (refreshed) {
-                    await messageChatbot(input);
-                  } else {
-                    signOut();
-                  }
-                }
                 await setItem("chatlog", chats).then(() =>
                   console.log("chatlog saved")
                 );

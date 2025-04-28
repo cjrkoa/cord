@@ -7,6 +7,7 @@ import {
   Appearance,
   useColorScheme,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { CloseModalProps } from "@/utils/types";
@@ -69,6 +70,7 @@ export default function SignIn({ closeModal }: CloseModalProps) {
 
   return (
     <View style={styles.mainContainer}>
+      <View style={styles.spacer} />
       <View style={styles.textInputContainer}>
         <TextInput
           style={styles.textInput}
@@ -85,23 +87,25 @@ export default function SignIn({ closeModal }: CloseModalProps) {
           autoCapitalize="none"
         />
       </View>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          handleSignInPress();
-          closeModal();
-        }}
-      >
-        Sign In
-      </Text>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          closeModal();
-        }}
-      >
-        Cancel
-      </Text>
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={styles.pressable}
+          onPress={() => {
+            closeModal();
+          }}
+        >
+          <Text style={styles.text}>Cancel</Text>
+        </Pressable>
+        <Pressable
+          style={styles.pressable}
+          onPress={() => {
+            handleSignInPress();
+            closeModal();
+          }}
+        >
+          <Text style={styles.text}>Sign In</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -125,6 +129,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors["dark"].tabBarBackground,
+  },
+  spacer: {
+    height: "40%",
+  },
+  buttonsContainer: {
+    height: "40%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  pressable: {
+    backgroundColor: Colors["dark"].background,
+    width: "35%",
+    height: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
+    borderColor: Colors["dark"].tint,
+    borderWidth: 2,
+    borderRadius: 20,
   },
   text: { color: Colors["dark"].text },
 });

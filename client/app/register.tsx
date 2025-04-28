@@ -1,10 +1,10 @@
-import { router } from "expo-router";
 import {
   Text,
   View,
   TextInput,
-  useColorScheme,
   StyleSheet,
+  Pressable,
+  Alert,
 } from "react-native";
 import { useState } from "react";
 import { Colors } from "@/constants/Colors";
@@ -16,28 +16,48 @@ export default function Register({ closeModal }: CloseModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const showAlert = () => {
+    Alert.alert(
+      "Invalid Email",
+      "Please enter a valid email address",
+      [{ text: "Okay", onPress: () => console.log("Ok Pressed") }],
+      { cancelable: false }
+    );
+  };
+
   const handleRegister = async (
     username: string,
     email: string,
     password: string
   ) => {
-    const response = await fetch(SERVER_ADDRESS + "register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        lastInteraction: null,
-      }),
-    });
-    return response.status;
+    if (
+      email.includes("@") &&
+      (email.includes(".com") ||
+        email.includes(".org") ||
+        email.includes(".edu") ||
+        email.includes(".net"))
+    ) {
+      const response = await fetch(SERVER_ADDRESS + "register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          lastInteraction: null,
+        }),
+      });
+      return response.status;
+    } else {
+      return 400;
+    }
   };
 
   return (
     <View style={styles.mainContainer}>
+      <View style={styles.spacer} />
       <View style={styles.textInputContainer}>
         <TextInput
           style={styles.textInput}
@@ -62,23 +82,30 @@ export default function Register({ closeModal }: CloseModalProps) {
           autoCapitalize="none"
         />
       </View>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          console.log(handleRegister(username, email, password));
-          closeModal();
-        }}
-      >
-        Register
-      </Text>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          closeModal();
-        }}
-      >
-        Cancel
-      </Text>
+      <View style={styles.buttonsContainer}>
+        <Pressable
+          style={styles.pressable}
+          onPress={() => {
+            closeModal();
+          }}
+        >
+          <Text style={styles.text}>Cancel</Text>
+        </Pressable>
+        <Pressable
+          style={styles.pressable}
+          onPress={async (e) => {
+            const response = await handleRegister(username, email, password);
+
+            if (response >= 200 && response < 300) {
+              closeModal();
+            } else {
+              showAlert();
+            }
+          }}
+        >
+          <Text style={styles.text}>Register</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -103,5 +130,26 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors["dark"].tabBarBackground,
+  },
+  spacer: {
+    height: "40%",
+  },
+  buttonsContainer: {
+    height: "40%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  pressable: {
+    backgroundColor: Colors["dark"].background,
+    width: "35%",
+    height: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 10,
+    marginTop: 10,
+    borderColor: Colors["dark"].tint,
+    borderWidth: 2,
+    borderRadius: 20,
   },
 });
