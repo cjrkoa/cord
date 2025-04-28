@@ -27,6 +27,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.cord.android"/>
         <data android:scheme="com.cordmentalhealth.cord"/>
+        <data android:scheme="com.eccia"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

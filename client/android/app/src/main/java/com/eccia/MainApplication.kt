@@ -1,4 +1,4 @@
-package com.cordmentalhealth.cord
+package com.eccia
 
 import android.app.Application
 import android.content.res.Configuration
