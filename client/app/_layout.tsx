@@ -22,8 +22,12 @@ export default function Root() {
   };
 
   useEffect(() => {
-    if (Platform.OS === "ios") {
-      requestATT();
+    try {
+      if (Platform.OS === "ios") {
+        requestATT();
+      }
+    } catch (e) {
+      console.error("ATT permission error:", e);
     }
   }, []);
 
