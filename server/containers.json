@@ -1,6 +1,6 @@
 {
   "flask": {
-    "image": ":flask-service.flask-container.20",
+    "image": ":flask-service.flask-container.32",
     "ports": {
       "5000": "HTTP"
     }

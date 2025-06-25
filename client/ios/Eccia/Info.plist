@@ -44,13 +44,17 @@
       <false/>
       <key>NSAllowsLocalNetworking</key>
       <true/>
-      <key>NSUserTrackingUsageDescription</key>
-<string>This app uses tracking to help deliver personalized content and improve the emotional support experience, including understanding user preferences and behavior over time. This information is only used for improving the service and will not be shared with third parties for advertising purposes.</string>
     </dict>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>We need access to your music library to save audio files.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We use your microphone to let you record inputs through voice. This is intended as an accessibility feature to reduce the cognitive load of typing some users may experience.</string>
     <key>NSUserActivityTypes</key>
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>This app uses tracking to help deliver personalized content and improve the emotional support experience, including understanding user preferences and behavior over time. This information is only used for improving the service and will not be shared with third parties for advertising purposes.</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>

@@ -21,6 +21,8 @@ COPY gpt_wrapper.py .
 COPY .env .
 COPY compute_sentence_score.py .
 COPY nrc-vad-trust-lexicon.csv .
+COPY prompt_injection_detection.joblib .
+COPY vectorizer.joblib .
 
 # Specify the command to run on container start
 CMD [ "python", "./server.py" ]

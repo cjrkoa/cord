@@ -3,13 +3,15 @@ from flask_cors import CORS
 from database import get_database
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token
-from gpt_wrapper import generate_response, system_prompts
+from gpt_wrapper import generate_response, system_prompts, process_audio
 from datetime import datetime, timedelta
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 from os import getenv
+from sklearn.feature_extraction.text import TfidfVectorizer
 from compute_sentence_score import compute_sentence_scores, compute_trust_score, is_meaningful, trust_dict, vad_dict, score_to_string
 import random
+import joblib
 
 load_dotenv()
 
@@ -17,6 +19,9 @@ app = Flask(__name__)
 CORS(app)
 
 db = get_database()
+
+vectorizer = joblib.load("vectorizer.joblib")
+prompt_injection_classifier = joblib.load("prompt_injection_detection.joblib")
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = getenv("JWT_SECRET_KEY")
@@ -47,19 +52,25 @@ def health_check():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    input = request.get_json()["message"]
+    message = request.get_json()["message"]
     username = request.get_json()["username"]
+
+    proba = prompt_injection_classifier.predict_proba(vectorizer.transform([message]))[0][1]
+
+    #if is_meaningful(message) and proba > 0.95:
+    #    return jsonify({"message": ["Sorry! Something went wrong."]})
+
     affect = {}
     
     user = db["users"].find_one({"username": username})
     affect_raw = user.get("affect_raw", [])
 
     # only compute affect of meaningful messages because attempting to compute score of short strings runs the risk of trying to compute score of an empty string (this will crash the server)
-    if is_meaningful(input):
-        affect = compute_sentence_scores(input, vad_dict, weight_distribution="quadratic")
+    if is_meaningful(message):
+        affect = compute_sentence_scores(message, vad_dict, weight_distribution="quadratic")
         if affect_raw is not None:
-            affect["trust"] = compute_trust_score(input, len(affect_raw), trust_dict)
-        else: affect["trust"] = compute_trust_score(input, 0, trust_dict)
+            affect["trust"] = compute_trust_score(message, len(affect_raw), trust_dict)
+        else: affect["trust"] = compute_trust_score(message, 0, trust_dict)
     else:
         affect = {
             "valence": 0.5,
@@ -77,17 +88,17 @@ def chat():
         memory.append(sys_prompt)
 
     response = []
-    response.append(generate_response(memory, input, system_prompts["old"]))
+    response.append(generate_response(memory, message, system_prompts["old"]).splitlines())
 
     # self-care directive for trust building
-    if random.random() <= 0.03 and affect["valence"] < 0.55 and is_meaningful(input):
-        response.append(generate_response([], input, "Provide a relevant one sentence self-care directive to the user based on their prompt. Show warmth."))
+    if random.random() <= 0.03 and affect["valence"] < 0.55 and is_meaningful(message):
+        response.append(generate_response([], message, "Provide a relevant one sentence self-care directive to the user based on their prompt. Show warmth."))
     
     if affect_raw is not None:
         affect_raw.append(score_to_string(affect))
     else: affect_raw = [score_to_string(affect)]
 
-    if is_meaningful(input):
+    if is_meaningful(message):
         db["users"].find_one_and_update(
             {"username": username}, 
             {"$set": {"affect_raw": affect_raw}}
@@ -110,15 +121,18 @@ def register():
     db["users"].insert_one({"username": username, "email": email, "password": hashed_password, "is_verified": True, "affect_profile": score_to_string({"valence": 0.5, "arousal": 0.5, "dominance": 0.5, "trust": 0.5}), "affect_raw": []}) # DONT FORGET TO CHANGE is_verified BACK TO FALSE AFTER PILOT TEST
 
     # Generate verification token
-    token = generate_verification_token(email)
+    try:    
+        token = generate_verification_token(email)
     
-    # Construct verification link
-    verification_link = f'https://flask-service.dkbedazshkb3y.us-east-1.cs.amazonlightsail.com/verify/{token}'
+        # Construct verification link
+        verification_link = f'https://flask-service.dkbedazshkb3y.us-east-1.cs.amazonlightsail.com/verify/{token}'
 
-    # Send verification email
-    msg = Message("Verify your email address", recipients=[email])
-    msg.body = f'Thank you for signing up to use Cord! :)\nVerify your account by clicking the link below:\n{verification_link}'
-    mail.send(msg)
+        # Send verification email
+        msg = Message("Verify your email address", recipients=[email])
+        msg.body = f'Thank you for signing up to use Cord! :)\nVerify your account by clicking the link below:\n{verification_link}'
+        mail.send(msg)
+    except:
+        pass
 
     return jsonify({"msg": "User registered successfully, check your email to verify"}), 201
 
@@ -206,14 +220,25 @@ def upload_feedback():
 @jwt_required()
 def evaluate_text_emotion():
     #current_user = get_jwt_identity()
-    input = request.get_json()["message"]
-    if is_meaningful(input):
-        emotion = compute_sentence_scores(input, vad_dict)
-        emotion["trust"] = compute_trust_score(input, 0, trust_dict)
+    message = request.get_json()["message"]
+    if is_meaningful(message):
+        emotion = compute_sentence_scores(message, vad_dict)
+        emotion["trust"] = compute_trust_score(message, 0, trust_dict)
     
         return jsonify(emotion)
     else:
         return jsonify({"msg": "Affect was not calculated because message was not meaningful"}), 200
+
+@app.route("/transcribe_audio", methods=["POST"])
+def transcribe_audio():
+    if "audio" not in request.files:
+        return jsonify({"error": "No audio file part"}), 400
+
+    audio_file = request.files["audio"]
+
+    processed = process_audio(audio_file)
+
+    return jsonify({"transcription": processed})
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.

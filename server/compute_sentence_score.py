@@ -313,5 +313,7 @@ if __name__ == "__main__":
     #    if is_meaningful(sentence):
     #        bigdata.append(compute_sentence_scores(sentence, vad_dict, weight_distribution="quadratic"))
     ##bigdata = [d for d in bigdata if d != {}]
-    data = [string_to_score(value) for value in affect_raw]
-    visualize_affect(data)
+    #data = [string_to_score(value) for value in affect_raw]
+    #visualize_affect(data)
+
+    print(compute_sentence_scores("Oh also whenever we end up chating next (no pressure) - I'd love to hear you talk about something you're passionate about. Anyway let me know when you have time!", vad_dict, weight_distribution="quadratic"))

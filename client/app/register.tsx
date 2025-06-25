@@ -95,11 +95,12 @@ export default function Register({ closeModal }: CloseModalProps) {
           style={styles.pressable}
           onPress={async (e) => {
             const response = await handleRegister(username, email, password);
-
-            if (response >= 200 && response < 300) {
+            console.log(response);
+            if (response < 400) {
               closeModal();
             } else {
-              showAlert();
+              //showAlert();
+              closeModal();
             }
           }}
         >

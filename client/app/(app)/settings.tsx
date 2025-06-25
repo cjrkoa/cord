@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  Switch,
   Appearance,
   useColorScheme,
   Modal,
@@ -24,7 +23,7 @@ export default function Settings() {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { signOut, session, refreshSession } = useSession();
+  const { signOut } = useSession();
 
   const styles = StyleSheet.create({
     mainContainer: {

@@ -1,9 +1,8 @@
-import { Text, Image } from "react-native";
-import { Redirect, Stack } from "expo-router";
+import { Image } from "react-native";
+import { Tabs, Redirect } from "expo-router";
 
 import { useSession } from "../../ctx";
 
-import { Tabs } from "expo-router";
 import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
@@ -43,18 +42,20 @@ export default function AppLayout() {
         headerShown: false,
       }}
     >
-      {/*<Tabs.Screen
-        name="goals"
-        options={{
-          title: "Goals",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "checkbox" : "checkbox-outline"}
-              color={color}
-            />
-          ),
-        }}
-      />*/}
+      {
+        <Tabs.Screen
+          name="audiorecorder"
+          options={{
+            title: "Record",
+            tabBarIcon: ({ color, focused }) => (
+              <TabBarIcon
+                name={focused ? "mic-sharp" : "mic-outline"}
+                color={color}
+              />
+            ),
+          }}
+        />
+      }
       <Tabs.Screen
         name="index"
         options={{
